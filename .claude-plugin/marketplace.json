@@ -1,9 +1,8 @@
 {
   "name": "subpowers",
-  "description": "Subpowers — a disciplined spec → plan → implement → debug → check → review workflow for coding agents, portable across any stack",
+  "description": "Subpowers \u2014 a disciplined spec \u2192 plan \u2192 implement \u2192 debug \u2192 check \u2192 review workflow for coding agents, portable across any stack",
   "owner": {
-    "name": "Oleksandr Hiliazov",
-    "email": "ohiliazov@bcdtriptech.com"
+    "name": "Oleksandr Hiliazov"
   },
   "plugins": [
     {

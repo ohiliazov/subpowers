@@ -4,8 +4,7 @@
   "description": "Six process skills that enforce spec-before-plan, plan-before-code, TDD, root-cause debugging, and evidence-before-claim. Stack-agnostic: per-project commands come from a .claude/subpowers.md contract.",
   "version": "1.0.0",
   "author": {
-    "name": "Oleksandr Hiliazov",
-    "email": "ohiliazov@bcdtriptech.com"
+    "name": "Oleksandr Hiliazov"
   },
   "repository": "https://github.com/ohiliazov/subpowers",
   "license": "MIT",
