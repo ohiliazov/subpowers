@@ -1,0 +1,17 @@
+{
+  "name": "subpowers",
+  "description": "Subpowers — a disciplined spec → plan → implement → debug → check → review workflow for coding agents, portable across any stack",
+  "owner": {
+    "name": "Oleksandr Hiliazov",
+    "email": "ohiliazov@bcdtriptech.com"
+  },
+  "plugins": [
+    {
+      "name": "subpowers",
+      "source": "./subpowers",
+      "description": "Six process skills that enforce spec-before-plan, plan-before-code, TDD, root-cause debugging, and evidence-before-claim. Stack-agnostic: per-project commands come from a .claude/subpowers.md contract.",
+      "category": "workflow",
+      "strict": false
+    }
+  ]
+}
