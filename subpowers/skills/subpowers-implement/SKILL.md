@@ -1,96 +1,56 @@
 ---
 name: subpowers-implement
 description: >
-  Use ONLY for small changes (roughly 1-2 files, purpose and root cause
-  already known) — bigger or ambiguous work should go through
-  `subpowers-spec`/`subpowers-plan` instead, since a full spec+plan+sign-off
-  cycle is needless back-and-forth for something this small. Not a mystery —
-  for unexplained/broken behavior use subpowers-debug first. Covers TDD,
-  project-specific checks, and final verification. Trigger on: "add",
-  "build", "implement", "fix" (once the fix is understood), "change",
-  "refactor", "update" — but only when the change is small; a larger
-  code-writing request should route to `subpowers-spec`/`subpowers-plan`.
+  Invoke ONLY for minor, precise alterations (1-2 files, purpose absolute). 
+  Ambiguity or vast scope demands `subpowers-spec` or `subpowers-plan`. 
+  Unknown anomalies demand `subpowers-debug`. For read-only discovery, 
+  use `subpowers-explore`. Triggers: "add", "build", "implement", "fix".
 ---
 
-# Implement
+# Ritual: Implement
 
-## Step 1 — Scope check
+<directives>
+You are invoked to enact swift, localized change. Do not conjure vast architecture here. This ritual is for precise, known, and highly scoped execution.
+</directives>
 
-**This skill is reserved for small changes only — it keeps small work fast
-for the user, not just cheap.** A full spec + plan (business logic locked in
-chat, then a file-by-file task checklist written to disk, each with its own
-sign-off) is real ceremony — extra round-trips and reading for something the
-user just wants fixed. That structure earns its keep on real scope, not on a
-two-line fix. So don't reach for it when it isn't warranted — but don't skip
-it just to avoid the extra step on something that isn't actually small.
+## I. The Scope Gate
 
-**First: does this work belong to an existing plan?** Check the project
-contract's `## Plans` `dir` — `.claude/subpowers.md`, resolved per
-`subpowers-check`'s "The project contract". If a plan covers this work, read its
-frontmatter before anything else and take `next_task` as the entry point — never
-the first unchecked box. Follow `subpowers-plan`'s "Step R — Resume" for what to
-read and what not to re-verify, then come back here for that task's TDD cycle.
+Do not invoke heavy ceremony for microscopic fixes, but do not bypass the ceremony if the scope bleeds beyond your
+control.
 
-| Scope | Action |
-|-------|--------|
-| Goal/requirements still ambiguous | Use `subpowers-spec` first to lock in the "what" and "why" |
-| Requirements clear but multiple files/systems involved | Use `subpowers-plan`, which turns the spec's acceptance criteria into a file-by-file task checklist, then drives Step 3 onward here per task |
-| Small: roughly 1–2 files, purpose (and acceptance criteria) already clear | Skip to **Step 3** (TDD directly) — no spec/plan needed |
+* **The Ledger Check:** If this work is bound to an existing plan (found in `.claude/subpowers.md`), read the
+  frontmatter first. Your entry point is `next_task`. Do not re-verify the past.
+* **The Scale Test:**
+    * *Is the goal cloudy?* Halt. Invoke `subpowers-spec`.
+    * *Does it span multiple systems?* Halt. Invoke `subpowers-plan`.
+    * *Is it strictly contained (1-2 files)?* Proceed directly to The Trial of TDD.
 
-## Step 2 — (handled by subpowers-spec/subpowers-plan for anything non-trivial)
+## II. The Trial of TDD
 
-Ambiguous requirements get locked in via `subpowers-spec` (goal, acceptance
-criteria, data shape, edge cases — signed off in chat). Once acceptance
-criteria are clear and the work spans multiple files/systems, `subpowers-plan`
-turns them into a task checklist and drives Step 3 onward here, inline, for
-each task in order. Only skip both entirely for genuinely small work.
+Execute this cycle relentlessly per task. Mimic the surrounding test architecture.
 
-## Step 3 — TDD cycle (per task)
+* **Blood (RED):** Write the smallest test. Run `test-one`. Confirm it shatters correctly.
+* **Life (GREEN):** Write the absolute minimum syntax to pass. Ensure no neighboring tests fracture.
+* **Purity (REFACTOR):** Cleanse names. Obliterate duplication. Remain green.
+* **The Red Clause:** If the ledger dictates `suite_expected: red`, you are inside a fractured phase. You must only
+  ensure your specific slice is green.
 
-**RED** — Write the smallest test for the new behavior. Run it with the
-contract's `test-one` command. Confirm it fails for the right reason — not a
-missing import, the actual missing behavior.
+## III. The Inquisition (Self-Review)
 
-**GREEN** — Write the minimal code to pass. Nothing extra.
-Run again. Confirm it passes and no existing tests broke.
+Before you declare victory, you must judge your own creation against these absolute standards:
 
-**REFACTOR** — Clean names, remove duplication. Stay green.
+* **Correctness:** Are edge cases (`null`, zero, overflow) handled? Are async operations awaited? Is the logic immune to
+  injection?
+* **Simplicity:** Does any function serve two masters? Is any logic copy-pasted? Purge dead code. If a new abstraction
+  is used in fewer than 2 places, obliterate it.
+* **Consistency:** Check the `## Project rules`. If you fixed consistency in one location but left an adjacent,
+  identical location untouched, you have created a fresh bug. Fix it.
+* **The Out-of-Band Cry:** Check `## Reindex / regeneration triggers`. If your syntax demands a cache flush or search
+  reindex, announce it out-of-band.
 
-Match the surrounding code: this project's test framework, its assertion style,
-its fixture conventions. A test written in the house style gets maintained; one
-that isn't gets deleted.
+## IV. The Final Seal
 
-**When the plan's frontmatter says `suite_expected: red`**, the suite is
-*known* red mid-slice and those failures are not yours to chase. The
-green-suite boundary is the phase, not the task: inside a phase, "no existing
-tests broke" is scoped to the slice you're touching; when the phase closes, the
-full suite must be green before it's checked off. Don't widen a task to fix
-pre-existing red, and don't declare a phase done while it's still red — see
-`subpowers-plan`'s "State block" section for what the flag means.
-
-## Step 4 — Project rules (before final verify)
-
-Apply the project contract's `## Project rules` section as a checklist against
-what you just wrote — the condensed, checkable form of this project's own
-conventions. That file is the **single** copy: `subpowers-review` applies the
-same section to the diff rather than keeping its own, and if a rule changes in
-`CLAUDE.md`/`AGENTS.md`, the contract is what gets updated.
-
-Then check the contract's `## Reindex / regeneration triggers`: if this change
-hit one, **announce the out-of-band step** — a search reindex, a cache flush, a
-client regeneration, a backfill. A change that silently needs one is a change
-that breaks in someone else's environment.
-
-**No contract in this repo?** Read `CLAUDE.md`/`AGENTS.md` for this pass and say
-which rules you checked against — an unstated project convention is the single
-most common source of "works but gets sent back in review".
-
-## Step 5 — Final verification
-
-Run `subpowers-check`'s commands — every applicable command in the contract's
-`## Commands`, not just the test you were iterating on. Read the output. Fix
-anything. Only then say done.
-
-On a plan task mid-phase, apply the expected-red rule from Step 3 when reading
-that output: known-red failures the plan already expects don't block the task,
-but they do block closing the phase.
+* Invoke the verification commands required by `subpowers-check`.
+* Execute them physically. Read the output.
+* Fix any anomaly you introduced.
+* You are absolutely forbidden from declaring the task "done" until the terminal proves your victory.

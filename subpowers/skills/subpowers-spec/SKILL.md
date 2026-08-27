@@ -1,144 +1,83 @@
 ---
 name: subpowers-spec
 description: >
-  Use before any file-level planning or implementation when a request is
-  broad, ambiguous, or needs business logic, data models, or acceptance
-  criteria defined first. Trigger on: "design a feature", "write a spec",
-  "define requirements", or any request whose goal or "done" state isn't
-  clear yet. Produces a spec (what/why) that `subpowers-plan` or
-  `subpowers-implement` then turns into the how. Skip when the goal and
-  acceptance criteria are already obvious — go straight to `subpowers-plan`
-  or `subpowers-implement`.
+  Invoke when the goal is cloudy or business logic must be defined before files 
+  are altered. Triggers: "design a feature", "write a spec". Produces the "what". 
+  If the user is only asking how existing code works without requesting a change, 
+  DO NOT invoke this. Route to `subpowers-explore` instead.
 ---
 
-# Spec
+# Ritual: Spec
 
-## The Rule
+<directives>
+You are the Oracle. You decree the "what" and the "why" before a single file is touched. You do not concern yourself with the "how" (file paths, functions, tasks). You lock in the business logic. Do not guess; define.
+</directives>
 
-**Lock in the "what" and "why" before anything touches files or code.**
-A spec turns "build me a usage dashboard" into a concrete goal, acceptance
-criteria, data shape, and edge cases someone else could scope and build from —
-without yet deciding which files change.
+## I. The Divination (Step 0)
 
-This is a business-logic checkpoint, not a file-level one. It never names
-files, functions, or a task checklist — that's `subpowers-plan`'s job once
-the spec is signed off.
+* **Read the Realm:** Before writing, observe the existing models, schemas, and adjacent features. Your spec must fit
+  the physical reality of the codebase, not a generic hallucination.
+* **Batch Your Ignorance:** If requirements are ambiguous, resolve them in a single strike. Ask up to 3 highly targeted,
+  multiple-choice or yes/no questions (one tool call). Do not ask about file layouts or library choices—that is the
+  architect's (`subpowers-plan`) burden.
 
-## Step 0 — Understand the domain, then clarify
+## II. The Manifestation (Step 1)
 
-1. **Read relevant codebase context first.** Look at existing models,
-   schemas, and adjacent features to understand how this domain already
-   works here — so the spec's data model and edge cases fit reality instead
-   of a generic guess.
-2. **Batch clarifying questions.** Resolve requirements ambiguity in one
-   round: up to 3 highly targeted questions (each a single decision, 2-4
-   options, multiple-choice or yes/no) in a single `AskUserQuestion` call —
-   covering things like ambiguous business rules, edge-case handling, or
-   UX intent that would change what "done" means.
-   - Don't ask about implementation details (file layout, library choice) —
-     that belongs to `subpowers-plan`, not here.
-   - If the goal and "done" state are already unambiguous, skip this step
-     and go straight to Step 1.
-
-## Step 1 — Write the spec
-
-Present directly in chat (or as an ephemeral artifact for something visual,
-e.g. a UI mockup). Nothing is written to disk at this stage — whether the
-spec ends up in a repo file at all is Step 2's routing decision, made only
-after sign-off, so a rejected spec never hits disk:
+You will manifest the specification directly in the chat. **DO NOT write anything to disk at this stage.** A rejected
+spec must never taint the file system.
 
 ```markdown
 # <Feature Name> Spec
 
-**Goal:** One sentence — the primary objective.
+**Goal:** <One absolute defining objective sentence.>
 
 **Acceptance Criteria:**
-- [ ] Concrete, checkable condition that must hold for this to be "done"
+
+- [ ] <Concrete, checkable condition>
 - [ ] ...
 
 **Data Models / State:**
-- New or changed structures, fields, enums, or state transitions this
-  feature requires — not exact file paths (that's `subpowers-plan`'s job to
-  place), but the full contract for every new or changed type and
-  method/function. Keep the signature and its description visually
-  separate — a fenced code block for the signature, then prose below it —
-  never inline a signature into a sentence.
-- When a type already exists and the spec adds to it, show the **complete**
-  type in the code block — every existing member plus the new one(s),
-  marked so it's clear which is which — not just the delta. A reader
-  shouldn't have to go check the current source to know the full shape of
-  what they're building against; showing only the new method leaves them
-  unable to tell how many methods it has or what else is already there.
-  For example:
-
-  ```python
-  class RateLimiter:
-      def __init__(self, limit: int, window_seconds: int): ...   # existing
-      def check(self, key: str) -> bool: ...                     # existing
-      def reset(self, key: str) -> None: ...                     # existing
-      def retry_after(self, key: str) -> float: ...              # NEW
-  ```
-  `retry_after` returns the seconds until `key` would next pass `check`,
-  or `0.0` if it would pass now.
-
-  A signature is unambiguous in a way prose isn't; leaving it out just
-  defers that ambiguity to `subpowers-plan` or implementation, where it's
-  more expensive to resolve.
-- Exception: for a large pre-existing type where most members are
-  unrelated to this feature (e.g. a shared infrastructure class with
-  dozens of methods), showing all of them would bury the new ones in noise
-  — the opposite problem. There, show only the new/changed members, but
-  say so explicitly (e.g. `# + 39 other existing methods, unrelated to
-  this feature`) so it reads as a deliberate partial view instead of
-  looking like the whole type.
-
-**Flow Diagram:**
-A Mermaid diagram of the feature's flow — as few nodes and edges as the
-flow can be reduced to while staying accurate. Collapse steps that always
-happen together into one node; drop nodes/edges that don't change the
-outcome. If the flow is a straight line with no branches or actors worth
-distinguishing, state that instead of drawing a diagram.
-
-**Edge Cases:**
-- Error conditions, unexpected inputs, empty/boundary states, and how each
-  should behave.
+<Define contract for full new/changed the types.>
 ```
 
-## Step 2 — Sign-off and routing
+### The Law of Signatures:
 
-Ask for a thumbs-up before routing onward. Do not let planning or
-implementation start on the strength of your own spec.
+When altering an existing type, you must show the **entire type** in a fenced code block, explicitly marking what is
+new. Do not show only the delta. The reader must never need to search the codebase to understand the final shape.
+*Example:*
 
-**If the user rejects or requests changes:** revise the spec in place in
-chat and ask again. Repeat until approved.
+```python
+class RateLimiter:
+    def __init__(self, limit: int, window_seconds: int): ...  # existing
 
-**Once approved, route by scope:**
+    def check(self, key: str) -> bool: ...  # existing
 
-- **Complex (multiple files/systems)** — **persist the spec, then** hand off
-  to `subpowers-plan`, which turns these acceptance criteria into a
-  file-by-file task checklist.
+    def retry_after(self, key: str) -> float: ...  # NEW
+```
 
-  Write `<plans dir>/<slug>.md`, where `<plans dir>` is the project
-  contract's `## Plans` `dir` — `.claude/subpowers.md`, resolved per
-  `subpowers-check`'s "The project contract"; default
-  `docs/subpowers/plans/` when the repo has no contract. The file opens with
-  the state-block frontmatter — schema per `subpowers-plan`'s "State block"
-  section, with `status: planned`, `current_task: null`, `next_task: null` (no
-  tasks exist yet), and today's date — followed by the signed-off spec verbatim
-  under a `## Spec` heading. `subpowers-plan` appends Goal / Architecture /
-  Tasks below it and takes over the frontmatter from there.
+*(Exception: If the type is massive, show the new members and state `# + X other existing methods` to prevent noise).*
 
-  That `## Spec` section **is** the record of decisions carried in from the
-  spec conversation, and the thing implementation reads instead of
-  re-litigating them. Nobody retypes spec content into the plan by hand, and
-  nothing is lost when this conversation's context is.
+### The Flow and The Edge:
 
-  If the contract says `dir: none`, the spec stays in the conversation and
-  gets handed to `subpowers-plan` inline — say so explicitly when handing off,
-  because the handoff-record guarantee is then off.
+* **Flow Diagram:** Render a minimal Mermaid diagram. Collapse redundant nodes. If the flow is a straight line, state
+  that instead of drawing a useless diagram.
+* **Edge Cases:** Define error conditions, empty states, and exact expected behaviors.
 
-- **Simple (1-2 files, clear purpose)** — skip planning; hand off directly
-  to `subpowers-implement`, carrying the acceptance criteria forward as the
-  definition of done for the TDD cycle. **Nothing goes to disk** — the work
-  finishes inside this session, so a spec file would be pure overhead that
-  outlives its own usefulness as a stale artifact.
+## III. The Oath of Approval (Step 2)
+
+Present the manifestation. Demand my validation (a thumbs-up). Do not route to planning or implementation until I decree
+it is acceptable. If rejected, revise it in the chat and ask again.
+
+## IV. The Fork of Destiny
+
+Once the spec is sealed by my approval, route it based on its physical weight:
+
+* **Complex (Multiple Files/Systems):**
+    1. Persist the spec to disk at `docs/subpowers/plans/<slug>.md`.
+    2. Write the exact frontmatter required by the Plan Ritual (`status: planned`, `current_task: null`,
+       `next_task: null`).
+    3. Place the approved text under a `## Spec` heading.
+    4. Invoke `subpowers-plan` to take over.
+* **Simple (1-2 Files):**
+    1. **Do not write to disk.** The spec is ephemeral.
+    2. Carry the acceptance criteria in your context and invoke `subpowers-implement` immediately.

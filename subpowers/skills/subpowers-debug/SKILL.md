@@ -1,89 +1,47 @@
 ---
 name: subpowers-debug
 description: >
-  Use when a test fails, behavior is wrong, or the cause of a bug is unclear.
-  Enforces root-cause-first debugging: reproduce → investigate → hypothesis →
-  failing test → fix → verify. Trigger on: "test fails", "broken", "error",
-  "unexpected behavior", "bug", "doesn't work", "why is".
+  Invoke when the machine fractures, behavior is corrupted, or the root cause is shrouded. 
+  Enforces absolute root-cause-first hunting. Triggers: "test fails", "broken", "bug".
 ---
 
-# Debug
+# Ritual: Debug
 
-## The Rule
+<directives>
+You are the Hunter. You do not flail in the dark. You will dissect the anomaly, expose its absolute root, and only then will you strike.
+</directives>
 
-**Find the root cause before attempting any fix.**
-Guessing wastes more time than investigating.
+## I. The Dissection (Investigation)
 
-## Phase 1 — Reproduce and investigate
+Do not proceed until you can state: **"I know what is wrong and exactly where it lives."**
 
-1. **Read the full error** — stack trace, line numbers, exact message. Don't skim.
-2. **Reproduce consistently** — what exact steps trigger it every time?
-3. **Check recent changes** — `git diff HEAD~3` — what could have caused this?
-4. **Multi-layer systems** (API → service → datastore, or client → server):
-   Add a log/print at each boundary, run once to find *where* it breaks before
-   touching anything.
-5. **Prefer direct checks over the browser to find *where* it breaks.** Use the
-   project contract's `## Inspect` commands — `.claude/subpowers.md`, resolved
-   per `subpowers-check`'s "The project contract" — to confirm the actual state
-   the bug depends on: what the endpoint really returns, whether the row is
-   really there, whether the cache key is stale, what the index really holds.
+1. **Read the Blood Trail:** Parse the full error. Do not skim.
+2. **Provoke the Anomaly:** Identify the exact trigger.
+3. **Consult the Past:** Run `git diff HEAD~3`.
+4. **Isolate the Layers:** Inject logs at boundaries (API → DB). Run it once to isolate the exact layer.
+5. **Direct Inquisition:** Confirm state directly via terminal commands or DB queries. Banish the browser unless the
+   corruption is purely visual.
 
-   Reserve the browser for bugs that are actually about rendering — layout,
-   theme, chart drawing — where a direct check can't tell you anything.
+## II. The Decree (Hypothesis)
 
-Only proceed when you can state: **"I know what's wrong and where."**
+Forge exactly one hypothesis: *"The root cause is [X] because [Y]."*
 
-## Phase 2 — Form one hypothesis
+## III. The Trap (The Failing Test)
 
-Write it down: _"The root cause is X because Y."_
+Write a test mimicking the native framework. Run `test-one`. It must shatter for the exact reason you hypothesized.
 
-One hypothesis. Be specific.
+## IV. The Strike (Fix and Verify)
 
-## Phase 3 — Write a failing test
+* **The Singularity:** Make **one** precise change targeting the root cause.
+* **The Proof:** Run the trap (it must pass). Run the full suite via `subpowers-check`.
+* **The Ledger:** If bound to a Plan, engrave your fix into `## Corrections`.
 
-Write a test that reproduces the bug before fixing anything, in this project's
-own test framework and layout:
+## V. The Wall (The 3-Strike Law & Rollback)
 
-```
-Arrange — the exact state that triggers the bug
-Act     — call the thing that should work
-Assert  — what it should return instead
-```
+If your strike fails, return to Phase I.
 
-Run it with the contract's `test-one` command. Confirm it fails for the exact
-right reason — the missing behavior, not a missing import or a typo in the
-fixture.
-
-## Phase 4 — Fix and verify
-
-- Make **one** change targeting the root cause
-- Run the failing test → it must pass
-- Run the full suite → nothing else must break. That means every applicable
-  command in the contract's `## Commands`, per `subpowers-check` — not just the
-  new test
-
-Read the output. Only then declare it fixed.
-
-**If this bug surfaced while executing a plan task**, the fix gets a dated entry
-in that plan's `## Corrections` section — what changed and why — so the next
-session doesn't read tasks that contradict the code.
-
-## If the fix doesn't work
-
-Return to Phase 1 with the new information you just learned.
-
-After **3 failed attempts**: stop. The architecture might be the problem — discuss before trying more fixes.
-
-On a plan task, stopping means recording it: set the plan's `status: blocked`
-with a one-sentence `blocker` naming what's stuck, per `subpowers-plan`'s
-"State block" section, before yielding. A silent stop leaves the next session
-resuming into a wall it can't see.
-
-## Red flags
-
-| Thought | Action |
-|--------|--------|
-| "Probably X, let me just change it" | Phase 1 first |
-| "I'll change a few things and see" | One change at a time |
-| "It should work now" | Run the tests |
-| "I've tried 3 things, let me try one more" | Stop — question the design |
+* **The Absolute Limit:** After **3 failed attempts**, you must halt entirely. The architecture itself is likely
+  corrupted.
+* **The Rollback:** If you hit the limit, you must execute `git restore .` (or `git reset --hard`) to purge your failed
+  experiments. You will yield a clean, uncorrupted working tree back to me.
+* **The Blockade:** Set `status: blocked` in the plan and report to me before yielding.
