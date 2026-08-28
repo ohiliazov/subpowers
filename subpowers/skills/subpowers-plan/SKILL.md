@@ -12,31 +12,31 @@ description: >
 # Plan
 
 <directives>
-Do not execute blindly. Translate the requirements (the Spec) into a file-by-file blueprint. This file becomes the source of truth for the work, and the handoff record a session that has lost its context can re-enter from.
+Translate the spec into a file-by-file plan before code moves. This file becomes the source of truth for the work, and the handoff record a session that has lost its context can resume from.
 </directives>
 
-## I. The Anchoring (Step 0)
+## 1. Preconditions
 
-* **The Spec Check:** A plan cannot exist without a goal. If the acceptance criteria are missing or ambiguous, halt.
-  Route to `subpowers-spec`.
-* **The Scale Check:** If the scope collapses to 1-2 files, abandon this skill and route to `subpowers-implement`.
-* **The Reality Read:** Read the actual files, interfaces, and callers *before* planning. Do not build blueprints on
+* **A spec must exist.** A plan cannot exist without a goal. If the acceptance criteria are missing or ambiguous, stop
+  and route to `subpowers-spec`.
+* **Re-check scope.** If the work collapses to 1-2 files, abandon this skill and route to `subpowers-implement`.
+* **Read before planning.** Read the actual files, interfaces, and callers *before* writing tasks. Do not plan against
   assumed architecture.
-* **Interrogation:** If architectural decisions remain open, ask up to 3 targeted questions in one tool call.
+* **Batch your questions.** If architectural decisions remain open, ask up to 3 targeted questions in one tool call.
 
-## II. The Realm & Opt-Out (Where Plans Live)
+## 2. Where plans live
 
-* **Location:** Plans live in the directory defined by `.claude/subpowers.md` (`## Plans` section, defaulting to
-  `docs/subpowers/plans/`).
-* **The Opt-Out Law (`dir: none`):** If the contract specifies `dir: none`, plan files are forbidden. Keep the plan in
-  the chat context and state plainly that handoff persistence is disabled.
-* **The Append Law:** If `subpowers-spec` already created the plan file with frontmatter and a `## Spec` section, **do
-  not overwrite it**. Append your Goal, Architecture, and Task sections below the existing `## Spec` heading, and update
-  the frontmatter.
+* **Location:** The directory defined by `.claude/subpowers.md`'s `## Plans` section, defaulting to
+  `docs/subpowers/plans/`.
+* **Opt-out (`dir: none`):** If the contract specifies `dir: none`, plan files are forbidden. Keep the plan in the chat
+  context and state plainly that handoff persistence is disabled.
+* **Append, never overwrite:** If `subpowers-spec` already created the plan file with frontmatter and a `## Spec`
+  section, **do not overwrite it**. Append your Goal, Architecture, and Task sections below the existing `## Spec`
+  heading, and update the frontmatter.
 
-## III. The Ledger (State Block)
+## 3. State block
 
-Every blueprint begins with this frontmatter. It is the resume contract. Parse it, trust it, and update it exactly.
+Every plan begins with this frontmatter. It is the resume contract. Parse it, trust it, and update it exactly.
 
 ```yaml
 ---
@@ -51,19 +51,18 @@ updated: YYYY-MM-DD
 ---
 ```
 
-* **Vocabulary:** `[ ]` pending · `[x]` executed · `[~]` deferred by a decision, reason inline.
-* **Ordering Is Not Deferral:** an item merely gated by task order (`[after E2]`, `depends on F1`) stays `[ ]`. It will
+* **Vocabulary:** `[ ]` pending · `[x]` done · `[~]` deferred by a decision, reason inline.
+* **Ordering is not deferral:** an item merely gated by task order (`[after E2]`, `depends on F1`) stays `[ ]`. It will
   be actioned normally when its turn comes; marking it `[~]` forces a future session to ask permission for ordinary
   sequenced work.
-* **The Governing Rule:** `next_task` dictates position. Never infer it by grepping for the first `[ ]` — deferred tasks
-  stay behind on purpose, so the first unchecked box is routinely behind the real frontier. Never action a `[~]` item
-  without asking.
+* **`next_task` is authoritative:** never infer position by grepping for the first `[ ]` — deferred tasks stay behind on
+  purpose, so the first unchecked box is routinely behind the real frontier. Never action a `[~]` item without asking.
 
 This schema is defined here and nowhere else. Other skills cite this section rather than restating it.
 
-## IV. Forging the Blueprint (Step 1)
+## 4. Write the plan
 
-Write the plan to `<plans_dir>/<slug>.md`, and show it in the chat for review.
+Write it to `<plans_dir>/<slug>.md`, and show it in the chat for review.
 
 * **Traceability:** Every task must cite the acceptance criteria it fulfills.
 * **Tagging:** Mark every task `[independent]` or `[sequential]`. A task is `independent` only if it shares ZERO files
@@ -98,54 +97,57 @@ Write the plan to `<plans_dir>/<slug>.md`, and show it in the chat for review.
 <!-- Append-only log of mid-flight course corrections -->
 ```
 
-When the approach changes mid-execution — a task resliced, a dependency discovered, an item deferred — it gets a dated
+Write the **real** command into that first box — the contract's `test-one` with this task's test path substituted in. A
+placeholder is a command the next session has to reconstruct.
+
+When the approach changes mid-execution — a task resliced, a dependency discovered, an item deferred — add a dated
 `## Corrections` entry saying what changed and why. Without a defined home, corrections land wherever the writer
 happened to be, and the next session reads a plan whose tasks contradict its own prose.
 
-## V. The Oath (Step 2)
+## 5. Sign-off
 
-Present the blueprint and require explicit approval. Do not move code until it is given. If it is rejected, revise the
-file in place and ask again.
+Present the plan and require explicit approval. Do not move code until it is given. If it is rejected, revise the file
+in place and ask again.
 
-## VI. Resurrection (Step R — Resuming a Plan)
+## 6. Resume an existing plan
 
-When entering a session with an existing plan, start here, not at Step 0. Steps 0-2 already happened; redoing them
-re-litigates an approved plan.
+When entering a session with a plan already written, start here, not at step 1. Steps 1-5 already happened; redoing
+them re-litigates an approved plan.
 
 1. Read only the first 15 lines (the frontmatter).
 2. Read `## Spec` and `## Corrections` — settled decisions, and where the plan's prose has been overtaken.
 3. Read the specific task named by `next_task`, not the whole plan.
 4. **Do not re-verify `[x]` items** unless a failure implicates them.
-5. If `status: blocked`, address the blocker or report it and halt. Never route around a recorded blocker silently.
+5. If `status: blocked`, address the blocker or report it and stop. Never route around a recorded blocker silently.
 
-## VII. Execution (Step 3)
+## 7. Execute
 
-* **Sequential Tasks:** Execute inline. Transition to `subpowers-implement` Step II (TDD). Update the frontmatter and
-  the checkboxes *in the same edit pass* — updated separately is how they end up disagreeing, and the frontmatter is
-  what the next session trusts.
-* **Independent Tasks:** Dispatch to sub-agents, in parallel where several are ready. If several would touch a shared
+* **Sequential tasks:** Execute inline. Hand off to `subpowers-implement` step 2 (TDD). Update the frontmatter and the
+  checkboxes *in the same edit pass* — updated separately is how they end up disagreeing, and the frontmatter is what
+  the next session trusts.
+* **Independent tasks:** Dispatch to sub-agents, in parallel where several are ready. If several would touch a shared
   file (an i18n file, a route table, a barrel export), run those sequentially instead.
-    * *The Dispatch:* Feed the sub-agent the task section, the frontmatter (`suite_expected`, `deps`), the relevant
-      `## Spec` and `## Corrections` entries, and the exact test commands. A sub-agent that guesses at the test command
-      reports a result you cannot trust.
-    * *The Return:* Require touched files, the exact command run, and its real output — not "tests pass". Treat a report
-      missing any of these as incomplete rather than filling the gap by assumption.
-    * *The Boundary:* **The sub-agent is forbidden from editing the plan file.** The main thread writes state on its
-      return, so two agents cannot clobber each other.
-    * *The Second Pair of Eyes:* You did not write this code and you do not share the sub-agent's reasoning, so review
-      its actual diff — not its report — against the ledger's `## Project rules` before you tick the boxes. A report
-      describes what the sub-agent believes it did. Accepting the report in place of the diff is how a task closes
-      green on work nobody read.
-* **The Phase Close:** Before checking off a phase whose tasks you executed inline yourself, get eyes that are not
-  yours on the accumulated diff. Dispatch one sub-agent with `git diff` for the phase and the ledger's
-  `## Project rules`, withholding your reasoning. This is the only pass that sees the whole phase at once, which is
-  where cross-task inconsistency lives — each task looked correct in isolation, and the seam between them is what no
-  single task's review covered.
-* **The Wall:** If an approach breaks down, halt immediately. Do not improvise around it. Set `status: blocked`, define
-  the `blocker`, log the reslice in `## Corrections`, and report before yielding.
+    * *Dispatch payload:* the task section, the frontmatter (`suite_expected`, `deps`), the relevant `## Spec` and
+      `## Corrections` entries, and the exact test commands. A sub-agent that guesses at the test command reports a
+      result you cannot trust.
+    * *Return contract:* require touched files, the exact command run, and its real output — not "tests pass". Treat a
+      report missing any of these as incomplete rather than filling the gap by assumption.
+    * *Plan-file ownership:* **the sub-agent is forbidden from editing the plan file.** The main thread writes state on
+      its return, so two agents cannot clobber each other.
+    * *Review the diff, not the report:* you did not write this code and you do not share the sub-agent's reasoning, so
+      review its actual diff against the contract's `## Project rules` before you tick the boxes. A report describes
+      what the sub-agent believes it did. Accepting the report in place of the diff is how a task closes green on work
+      nobody read.
+* **Phase close:** Before checking off a phase whose tasks you executed inline yourself, get eyes that are not yours on
+  the accumulated diff. Dispatch one sub-agent with `git diff` for the phase and the contract's `## Project rules`,
+  withholding your reasoning. This is the only pass that sees the whole phase at once, which is where cross-task
+  inconsistency lives — each task looked correct in isolation, and the seam between them is what no single task's
+  review covered.
+* **When an approach breaks down:** halt immediately. Do not improvise around it. Set `status: blocked`, define the
+  `blocker`, log the reslice in `## Corrections`, and report before yielding.
 
-## VIII. The Archive (Step 4)
+## 8. Archive
 
 When the work is complete (`status: complete`, `next_task: null`, and `subpowers-check`'s evidence bar met — not just
-boxes ticked), retire the blueprint. Move the file, and any companions, to the `archive` directory under a
-`YYYY-MM-DD-<slug>` folder, dated by archival. Leave no completed plans in the active directory.
+boxes ticked), move the plan to the `archive` directory under a `YYYY-MM-DD-<slug>` folder, dated by archival. Move any
+companion files with it. Leave no completed plans in the active directory.

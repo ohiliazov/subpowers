@@ -132,7 +132,7 @@ def main() -> int:
     # 5. cross-skill section citations resolve in the cited skill
     check("citations: `skill` Step N / §N point at a section that exists")
     for path, text in sorted(skill_docs.items()):
-        for ref, num in re.findall(r"`(subpowers-[a-z-]+)`(?:'s)?\s+(?:Step|§)\s*([IVX]+|\d+)", text):
+        for ref, num in re.findall(r"`(subpowers-[a-z-]+)`(?:'s)?\s+(?:[Ss]tep|§)\s*([IVX]+|\d+)", text):
             if ref not in names:
                 continue  # already reported by check 4
             target = SKILLS / ref / "SKILL.md"

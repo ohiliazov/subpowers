@@ -1,7 +1,7 @@
-# Subpowers — The Binding
+# Subpowers
 
 A workflow for coding agents that refuses to skip steps: **explore → spec → plan →
-implement → debug → check**. Six skills, one binding rule each, and a hard line between "I think this works"
+implement → debug → check**. Six skills, one rule each, and a hard line between "I think this works"
 and "I ran the command and read the output".
 
 Installable as a Claude Code plugin marketplace, so it follows you across machines and projects instead of living in one
@@ -20,7 +20,7 @@ Install at **user scope** to get the skills in every project.
 
 | Skill                 | The Rule                                                   | Invoke when...                                                           |
 |:----------------------|:-----------------------------------------------------------|:-------------------------------------------------------------------------|
-| `subpowers-explore`   | Look, but do not touch. Pure read-only discovery.          | You need to know "how X works" without triggering code changes or plans. |
+| `subpowers-explore`   | Read-only. No writes, no code changes.                     | You need to know "how X works" without triggering code changes or plans. |
 | `subpowers-spec`      | Lock the *what* and *why* before anything touches files.   | The goal or the definition of "done" is still fuzzy.                     |
 | `subpowers-plan`      | Scope and sequence multi-file work in writing before code. | The change spans several files or systems.                               |
 | `subpowers-implement` | Red → green → refactor, then review.                       | 1–2 files, purpose already clear.                                        |
@@ -51,7 +51,7 @@ Fill in what applies and delete the rest:
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------|
 | `## Commands`                        | `test`, `test-one`, `typecheck`, `lint`, `build` — run verbatim by Check, Implement, and Debug.                 |
 | `## Inspect`                         | Direct read-only state checks, strictly preferred over guessing or clicking through a UI.                       |
-| `## Plans`                           | Where plan blueprints are written and archived (`dir: none` opts out).                                          |
+| `## Plans`                           | Where plans are written and archived (`dir: none` opts out).                                          |
 | `## Evidence`                        | Extra claim → evidence rows that a standard green suite doesn't cover.                                          |
 | `## Project rules`                   | The condensed, checkable form of your `CLAUDE.md` — applied during Implement's self-review. |
 | `## Reindex / regeneration triggers` | Changes that demand an out-of-band step someone must be told about.                                             |
