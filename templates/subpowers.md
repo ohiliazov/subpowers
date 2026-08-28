@@ -12,6 +12,12 @@ command is not.
 
 Run from the repo root unless the command itself cds.
 
+If this repo has a canonical dev-ops entry point — a `Makefile`, a `justfile`, a
+`scripts/` wrapper — point every row at that instead of at raw `docker`/`curl`/
+`psql` invocations, and add a missing subcommand there rather than pasting a raw
+command here. A wrapper follows the repo when ports, container names, or auth
+change; a raw command pasted into this file silently goes stale.
+
 | Key | Command | Notes |
 |-----|---------|-------|
 | `test` | `<full test suite>` | The bar for "tests pass" |

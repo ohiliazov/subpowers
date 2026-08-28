@@ -52,6 +52,9 @@ updated: YYYY-MM-DD
 ```
 
 * **Vocabulary:** `[ ]` pending · `[x]` executed · `[~]` deferred by a decision, reason inline.
+* **Ordering Is Not Deferral:** an item merely gated by task order (`[after E2]`, `depends on F1`) stays `[ ]`. It will
+  be actioned normally when its turn comes; marking it `[~]` forces a future session to ask permission for ordinary
+  sequenced work.
 * **The Governing Rule:** `next_task` dictates position. Never infer it by grepping for the first `[ ]` — deferred tasks
   stay behind on purpose, so the first unchecked box is routinely behind the real frontier. Never action a `[~]` item
   without asking.

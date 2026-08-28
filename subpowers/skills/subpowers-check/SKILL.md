@@ -23,6 +23,10 @@ Discover the exact commands that prove reality.
    package manifests). State your intended commands and get approval before trusting their output.
 3. **The Offering:** If the ledger is missing, offer to write it exactly once, from the template shipped with this
    plugin (`templates/subpowers.md` in the subpowers marketplace repo, not a path in this project). Do not nag.
+4. **The Stale Ledger:** A wrong command is worse than a missing one — a suite invoked the wrong way exits 0 and proves
+   nothing. If a ledger command fails because it no longer matches the repo, or names a port, path, or entry point that
+   has since moved, fix the ledger in the same pass. Do not route around it with a command of your own while leaving the
+   ledger wrong for the next session.
 
 ## II. The Direct Inquisition
 
