@@ -73,6 +73,11 @@ Write the plan to `<plans_dir>/<slug>.md`, and show it in the chat for review.
 ```markdown
 # <Feature Name> Implementation Plan
 
+## Spec
+
+<!-- Present only when `subpowers-spec` created this file: the signed-off spec, verbatim.
+     Append below it; never overwrite it. Absent when the plan was written directly. -->
+
 **Goal:** <One sentence, carried from the spec>
 **Architecture:** <2-3 sentences>
 **Tech Stack:** <Key libs>

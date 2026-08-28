@@ -67,3 +67,15 @@ when that project's *process* genuinely differs, not just its commands.
 ## License
 
 MIT — see [LICENSE](LICENSE).
+## Validating changes
+
+```bash
+python3 scripts/validate.py
+```
+
+Checks the manifests parse and agree with `VERSION`, that each skill's frontmatter `name` matches its directory, that
+every `subpowers-<name>` mention resolves to a skill that exists, that cross-skill `Step N` citations point at real
+sections, that every `## Section` a skill cites is defined in the contract template or the plan layout, that whole-repo
+destructive git commands appear only as prohibitions, and that no skill file carries trailing whitespace or tabs.
+
+Runs on every push and pull request via [`.github/workflows/validate.yml`](.github/workflows/validate.yml).

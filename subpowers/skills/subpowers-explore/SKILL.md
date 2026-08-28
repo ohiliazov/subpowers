@@ -37,5 +37,5 @@ Do not answer from memory or inference. Prove every claim by reading the files.
 
 ## IV. The Yield
 
-End by asking whether the inquiry is answered, or whether changing this architecture should now route to
-`subpowers-spec`, `subpowers-plan`, or `subpowers-implement`.
+Stop when the inquiry is answered. Do not append a routing question by reflex — if the findings point to work worth
+doing, name it in one line and stop there; if they do not, just stop.
