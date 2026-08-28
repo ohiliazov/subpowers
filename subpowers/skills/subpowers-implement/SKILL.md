@@ -49,6 +49,18 @@ Before declaring victory, judge your own work against these standards:
 * **The Out-of-Band Cry:** Check `## Reindex / regeneration triggers`. If your change requires a cache flush, a search
   reindex, a client regeneration, or a backfill, announce it.
 
+**What this pass can and cannot establish.** You are reviewing your own work in the context that produced it, so you
+already believe the design decisions. That is fine for the checklist items above — a missing `await`, a hardcoded
+color, an untranslated string are mechanical, and you either find them on the list or you do not. It is worthless for
+judgment: whether the abstraction is right, whether a function does two things, whether an adjacent spot was left
+inconsistent. On those you will agree with yourself.
+
+**The escalation.** When the change turns on judgment rather than the checklist — a new abstraction, a refactor, a
+consistency call across several files — do not settle for this pass. Dispatch a sub-agent with the diff
+(`git diff HEAD`), the ledger's `## Project rules`, and nothing else: no reasoning, no justification, no summary of
+what you were trying to achieve. Context is what compromises a reviewer, so withhold it. Require findings ranked
+Critical / Important / Minor, and act on them before the Final Seal.
+
 ## IV. The Final Seal
 
 * Run the verification commands required by `subpowers-check`.

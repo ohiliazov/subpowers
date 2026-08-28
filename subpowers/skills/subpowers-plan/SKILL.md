@@ -132,6 +132,15 @@ re-litigates an approved plan.
       missing any of these as incomplete rather than filling the gap by assumption.
     * *The Boundary:* **The sub-agent is forbidden from editing the plan file.** The main thread writes state on its
       return, so two agents cannot clobber each other.
+    * *The Second Pair of Eyes:* You did not write this code and you do not share the sub-agent's reasoning, so review
+      its actual diff — not its report — against the ledger's `## Project rules` before you tick the boxes. A report
+      describes what the sub-agent believes it did. Accepting the report in place of the diff is how a task closes
+      green on work nobody read.
+* **The Phase Close:** Before checking off a phase whose tasks you executed inline yourself, get eyes that are not
+  yours on the accumulated diff. Dispatch one sub-agent with `git diff` for the phase and the ledger's
+  `## Project rules`, withholding your reasoning. This is the only pass that sees the whole phase at once, which is
+  where cross-task inconsistency lives — each task looked correct in isolation, and the seam between them is what no
+  single task's review covered.
 * **The Wall:** If an approach breaks down, halt immediately. Do not improvise around it. Set `status: blocked`, define
   the `blocker`, log the reslice in `## Corrections`, and report before yielding.
 
