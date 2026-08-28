@@ -63,8 +63,8 @@ Extra claim → evidence rows specific to this project, appended to
 
 The condensed, checkable form of this project's own conventions — whatever
 `CLAUDE.md`/`AGENTS.md`/the style guide says that a reviewer would flag. Group
-by area. `subpowers-implement` Step 4 and `subpowers-review` both apply this
-section verbatim, so this is the single copy.
+by area. `subpowers-implement`'s self-review applies this section verbatim, so
+this is the single copy.
 
 ### Consistency
 

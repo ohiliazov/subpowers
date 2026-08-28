@@ -1,6 +1,6 @@
 {
   "name": "subpowers",
-  "description": "Subpowers \u2014 a disciplined spec \u2192 plan \u2192 implement \u2192 debug \u2192 check \u2192 review workflow for coding agents, portable across any stack",
+  "description": "Subpowers \u2014 a disciplined explore \u2192 spec \u2192 plan \u2192 implement \u2192 debug \u2192 check workflow for coding agents, portable across any stack",
   "owner": {
     "name": "Oleksandr Hiliazov"
   },
@@ -8,7 +8,7 @@
     {
       "name": "subpowers",
       "source": "./subpowers",
-      "description": "Six process skills that enforce spec-before-plan, plan-before-code, TDD, root-cause debugging, and evidence-before-claim. Stack-agnostic: per-project commands come from a .claude/subpowers.md contract.",
+      "description": "Six process skills that enforce read-only discovery, spec-before-plan, plan-before-code, TDD, root-cause debugging, and evidence-before-claim. Stack-agnostic: per-project commands come from a .claude/subpowers.md contract.",
       "category": "workflow",
       "strict": false
     }

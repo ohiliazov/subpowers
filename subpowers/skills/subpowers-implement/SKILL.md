@@ -1,56 +1,57 @@
 ---
 name: subpowers-implement
 description: >
-  Invoke ONLY for minor, precise alterations (1-2 files, purpose absolute). 
-  Ambiguity or vast scope demands `subpowers-spec` or `subpowers-plan`. 
-  Unknown anomalies demand `subpowers-debug`. For read-only discovery, 
-  use `subpowers-explore`. Triggers: "add", "build", "implement", "fix".
+  Use ONLY for small, precise changes (1-2 files, purpose already clear).
+  Ambiguity or larger scope routes to `subpowers-spec` or `subpowers-plan`.
+  Unexplained behavior routes to `subpowers-debug`. Read-only discovery
+  routes to `subpowers-explore`. Trigger on: "add", "build", "implement",
+  "fix", "change", "refactor", "update".
 ---
 
-# Ritual: Implement
+# Implement
 
 <directives>
-You are invoked to enact swift, localized change. Do not conjure vast architecture here. This ritual is for precise, known, and highly scoped execution.
+This skill enacts swift, localized change. Do not design architecture here. It is for precise, known, tightly scoped execution.
 </directives>
 
 ## I. The Scope Gate
 
-Do not invoke heavy ceremony for microscopic fixes, but do not bypass the ceremony if the scope bleeds beyond your
-control.
+Do not invoke heavy ceremony for a two-line fix, and do not bypass ceremony when the scope grows past your control.
 
-* **The Ledger Check:** If this work is bound to an existing plan (found in `.claude/subpowers.md`), read the
-  frontmatter first. Your entry point is `next_task`. Do not re-verify the past.
+* **The Ledger Check:** If this work is bound to an existing plan, read its frontmatter first. Plans live in the
+  directory named by `.claude/subpowers.md`'s `## Plans` section — the contract names the location, it is not itself the
+  plan. Your entry point is `next_task`, never the first unchecked box. Do not re-verify the past.
 * **The Scale Test:**
-    * *Is the goal cloudy?* Halt. Invoke `subpowers-spec`.
-    * *Does it span multiple systems?* Halt. Invoke `subpowers-plan`.
-    * *Is it strictly contained (1-2 files)?* Proceed directly to The Trial of TDD.
+    * *Is the goal unclear?* Halt. Route to `subpowers-spec`.
+    * *Does it span multiple files or systems?* Halt. Route to `subpowers-plan`.
+    * *Is it contained to 1-2 files?* Proceed directly to The Trial of TDD.
 
 ## II. The Trial of TDD
 
-Execute this cycle relentlessly per task. Mimic the surrounding test architecture.
+Execute this cycle per task. Match the surrounding test architecture — the project's framework, assertions, fixtures.
 
-* **Blood (RED):** Write the smallest test. Run `test-one`. Confirm it shatters correctly.
-* **Life (GREEN):** Write the absolute minimum syntax to pass. Ensure no neighboring tests fracture.
-* **Purity (REFACTOR):** Cleanse names. Obliterate duplication. Remain green.
-* **The Red Clause:** If the ledger dictates `suite_expected: red`, you are inside a fractured phase. You must only
-  ensure your specific slice is green.
+* **RED:** Write the smallest test for the new behavior. Run `test-one`. Confirm it fails for the right reason.
+* **GREEN:** Write the minimum code to pass. Confirm no neighboring tests broke.
+* **REFACTOR:** Clean names. Remove duplication. Stay green.
+* **The Red Clause:** If the ledger says `suite_expected: red`, the suite is known-red mid-slice and those failures are
+  not yours to chase. Ensure only your own slice is green. The full suite must be green before the phase closes.
 
 ## III. The Inquisition (Self-Review)
 
-Before you declare victory, you must judge your own creation against these absolute standards:
+Before declaring victory, judge your own work against these standards:
 
-* **Correctness:** Are edge cases (`null`, zero, overflow) handled? Are async operations awaited? Is the logic immune to
-  injection?
-* **Simplicity:** Does any function serve two masters? Is any logic copy-pasted? Purge dead code. If a new abstraction
-  is used in fewer than 2 places, obliterate it.
-* **Consistency:** Check the `## Project rules`. If you fixed consistency in one location but left an adjacent,
-  identical location untouched, you have created a fresh bug. Fix it.
-* **The Out-of-Band Cry:** Check `## Reindex / regeneration triggers`. If your syntax demands a cache flush or search
-  reindex, announce it out-of-band.
+* **Correctness:** Are edge cases (`null`, zero, negative, overflow) handled? Are async operations awaited? Is the logic
+  immune to injection?
+* **Simplicity:** Does any function serve two masters? Is any logic copy-pasted? Delete dead code. If a new abstraction
+  is used in fewer than 2 places, remove it.
+* **Consistency:** Check the ledger's `## Project rules`. If you made one location consistent but left an adjacent,
+  equally applicable location untouched, you have created a fresh bug. Fix it.
+* **The Out-of-Band Cry:** Check `## Reindex / regeneration triggers`. If your change requires a cache flush, a search
+  reindex, a client regeneration, or a backfill, announce it.
 
 ## IV. The Final Seal
 
-* Invoke the verification commands required by `subpowers-check`.
-* Execute them physically. Read the output.
-* Fix any anomaly you introduced.
-* You are absolutely forbidden from declaring the task "done" until the terminal proves your victory.
+* Run the verification commands required by `subpowers-check`.
+* Execute them for real. Read the output.
+* Fix anything you introduced.
+* Do not declare the task done until the terminal proves it.
