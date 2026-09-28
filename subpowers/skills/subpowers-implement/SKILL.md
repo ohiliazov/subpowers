@@ -42,8 +42,14 @@ Before declaring the work done, check it against these standards:
 
 * **Correctness:** Are edge cases (`null`, zero, negative, overflow) handled? Are async operations awaited? Is the
   logic immune to injection?
-* **Simplicity:** Does any function do two things? Is any logic copy-pasted? Delete dead code. If a new abstraction is
-  used in fewer than 2 places, remove it.
+* **Simplicity:** Does any function do two things? Delete dead code. If a new abstraction is used in fewer than 2
+  places, remove it.
+* **Duplication:** Search the codebase, not just the diff, for logic your change repeats: an existing helper that
+  already does what you wrote, a sibling block you copied or paralleled, the same pattern recurring across the files
+  you touched. Duplication contained in your own diff is yours: remove it in REFACTOR. Duplication reaching outside
+  the diff is not: do not fix it silently. In your final report, list each instance — locations, what they share, the
+  proposed extraction and where it would live — and offer the deduplication. Act only on an explicit yes; if it spans
+  more than 2 files, route to `subpowers-plan`.
 * **Consistency:** Check the contract's `## Project rules`. If you made one location consistent but left an adjacent,
   equally applicable location untouched, you have created a fresh bug. Fix it.
 * **Out-of-band steps:** Check `## Reindex / regeneration triggers`. If your change requires a cache flush, a search

@@ -33,7 +33,7 @@ project's contract (below).
 
 There is deliberately no separate review skill. Independence in review comes from **context isolation**, not from which
 file the instructions live in — an author reviewing their own work agrees with themselves whether the checklist sits in
-a skill of its own or inline. So mechanical checks run inline (`implement` §III), and anything turning on judgment is
+a skill of its own or inline. So mechanical checks run inline (`implement` §3), and anything turning on judgment is
 dispatched to a sub-agent that receives the diff and the project rules and none of the author's reasoning.
 
 ## The Project Contract
