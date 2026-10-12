@@ -20,8 +20,8 @@ Translate the spec into a file-by-file plan before code moves. This file becomes
 * **A spec must exist.** A plan cannot exist without a goal. If the acceptance criteria are missing or ambiguous, stop
   and route to `subpowers-spec`.
 * **Re-check scope.** If the work collapses to 1-2 files, abandon this skill and route to `subpowers-implement`.
-* **Read before planning.** Read the actual files, interfaces, and callers *before* writing tasks. Do not plan against
-  assumed architecture.
+* **Read before planning.** Read the actual files, interfaces, and callers *before* writing tasks — the relevant spans,
+  not whole files. Do not plan against assumed architecture.
 * **Batch your questions.** If architectural decisions remain open, ask up to 3 targeted questions in one tool call.
 
 ## 2. Where plans live
@@ -62,7 +62,8 @@ This schema is defined here and nowhere else. Other skills cite this section rat
 
 ## 4. Write the plan
 
-Write it to `<plans_dir>/<slug>.md`, and show it in the chat for review.
+Write it to `<plans_dir>/<slug>.md` once. In the chat, give the path and a compact outline — task names, tags, and
+files — not the plan text again. With `dir: none`, the plan text itself goes in the chat, once.
 
 * **Traceability:** Every task must cite the acceptance criteria it fulfills.
 * **Tagging:** Mark every task `[independent]` or `[sequential]`. A task is `independent` only if it shares ZERO files
@@ -125,13 +126,15 @@ them re-litigates an approved plan.
 * **Sequential tasks:** Execute inline. Hand off to `subpowers-implement` step 2 (TDD). Update the frontmatter and the
   checkboxes *in the same edit pass* — updated separately is how they end up disagreeing, and the frontmatter is what
   the next session trusts.
-* **Independent tasks:** Dispatch to sub-agents, in parallel where several are ready. If several would touch a shared
-  file (an i18n file, a route table, a barrel export), run those sequentially instead.
+* **Independent tasks:** Dispatch to sub-agents, in parallel where several are ready, only when each is large enough
+  to repay a cold start; run small ones inline. If several would touch a shared file (an i18n file, a route table, a
+  barrel export), run those sequentially instead.
     * *Dispatch payload:* the task section, the frontmatter (`suite_expected`, `deps`), the relevant `## Spec` and
       `## Corrections` entries, and the exact test commands. A sub-agent that guesses at the test command reports a
       result you cannot trust.
-    * *Return contract:* require touched files, the exact command run, and its real output — not "tests pass". Treat a
-      report missing any of these as incomplete rather than filling the gap by assumption.
+    * *Return contract:* require touched files, the exact command run, its exit status, and the summary line plus
+      failure excerpts (40 lines at most) — not "tests pass", and not a full log. Treat a report missing any of these
+      as incomplete rather than filling the gap by assumption.
     * *Plan-file ownership:* **the sub-agent is forbidden from editing the plan file.** The main thread writes state on
       its return, so two agents cannot clobber each other.
     * *Review the diff, not the report:* you did not write this code and you do not share the sub-agent's reasoning, so

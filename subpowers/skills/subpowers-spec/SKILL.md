@@ -16,8 +16,8 @@ Establish the "what" and the "why" before a single file is touched. Do not decid
 
 ## 1. Ground the spec
 
-* **Read the codebase first:** Read the existing models, schemas, and adjacent features. The spec must fit the reality
-  of this codebase, not a generic guess.
+* **Read the codebase first:** Read the existing models, schemas, and adjacent features — the spans that matter
+  (`offset`/`limit`), not whole files. The spec must fit the reality of this codebase, not a generic guess.
 * **Batch your questions:** If requirements are ambiguous, resolve them in one round — up to 3 targeted,
   multiple-choice or yes/no questions in a single tool call. Do not ask about file layouts or library choices; those
   belong to `subpowers-plan`.

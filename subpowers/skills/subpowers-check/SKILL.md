@@ -34,6 +34,11 @@ Verify state through the terminal, not the browser. Use the contract's `## Inspe
 datastore queries, or cache checks. Reserve the browser for claims that are genuinely about rendering — layout, theme,
 chart drawing.
 
+**Bounded output.** Every line a command prints stays in context and is re-read on every later request. Redirect each
+command's output to a scratch file outside the repo, then print the exit status and the last 40 lines. Open more of the
+file only for the failing tests or errors. The summary line and the failures are the evidence; a full passing log is
+not. Never pipe straight into `tail` — the pipe hides the exit status.
+
 ## 3. Evidence required
 
 Partial runs do not count. A passing unit test is not a passing build. Run the full suite before you claim anything.
@@ -59,10 +64,5 @@ When the whole plan is verified, update the YAML state block to `status: complet
 
 ## 5. Stop conditions
 
-Each thought below is a hard stop. Do not keep reasoning — run the command.
-
-* *"It should work."* → run it
-* *"It's probably fine."* → run it
-* *"Tests passed earlier."* → the code changed. Run them again.
-* *"The typecheck passed, so the build is fine."* → a typecheck is not a build. Run the build.
-* *"All boxes are checked, so it is done."* → checked boxes are not evidence. Run this skill anyway.
+"Should work", "probably fine", "passed earlier" (the code changed since), "the typecheck passed so the build is
+fine", "all boxes are checked" — each is a hard stop. Run the command.

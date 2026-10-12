@@ -30,7 +30,8 @@ Do not run heavy process for a two-line fix, and do not skip it when the scope g
 
 Run this per task. Match the surrounding test architecture — the project's framework, assertions, fixtures.
 
-* **RED:** Write the smallest test for the new behavior. Run `test-one`. Confirm it fails for the right reason.
+* **RED:** Write the smallest test for the new behavior. Run `test-one`. Confirm it fails for the right reason. Run
+  commands with `subpowers-check`'s §2 bounded output.
 * **GREEN:** Write the minimum code to pass. Confirm no neighboring tests broke.
 * **REFACTOR:** Clean names. Remove duplication. Stay green.
 * **Known-red suites:** If the contract says `suite_expected: red`, the suite is known-red mid-slice and those failures

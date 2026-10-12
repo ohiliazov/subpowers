@@ -18,7 +18,7 @@ Do not proceed until you can state: **"I know what is wrong and exactly where it
 
 1. **Read the error:** Parse it in full — stack trace, line numbers, exact message. Do not skim.
 2. **Reproduce it:** Identify the exact trigger, and confirm it fires every time.
-3. **Check recent changes:** Run `git diff HEAD~3`.
+3. **Check recent changes:** Run `git diff --stat HEAD~3`, then read the diff of only the files on the failing path.
 4. **Isolate the layer:** Log at each boundary (API → service → datastore). Run once to find which layer breaks before
    changing anything.
 5. **Check state directly:** Confirm state through terminal commands and datastore queries — the contract's
@@ -36,7 +36,8 @@ hypothesized — not a missing import, not a broken fixture.
 ## 4. Fix and verify
 
 * **One change:** A single precise change targeting the root cause.
-* **Verify:** Run the failing test — it must pass. Then run the full suite via `subpowers-check`.
+* **Verify:** Run the failing test — it must pass. Then run the full suite via `subpowers-check`, with its §2 bounded
+  output.
 * **Record:** If bound to a plan, record the fix in `## Corrections`.
 
 ## 5. Three-strike limit

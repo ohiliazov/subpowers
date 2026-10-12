@@ -25,9 +25,12 @@ Observe the codebase, trace the logic, and report what is actually there today. 
 Do not answer from memory or inference. Prove every claim by reading the files.
 
 1. **Trace, don't guess:** Do not `grep` and infer from function names. Follow the call stack — read the interfaces,
-   then read the implementations.
+   then read the implementations. Read the span you need (`offset`/`limit`), not whole files.
 2. **State the boundaries:** Identify where the logic begins (the entry point) and where it ends (the datastore, the
    return payload, the UI render).
+3. **Keep sweeps out of this context:** When the answer needs more than a handful of files, delegate the sweep to a
+   sub-agent and require `file:line` citations back — not file contents. Read the one or two load-bearing spans
+   yourself before you assert them.
 
 ## 3. Output
 
