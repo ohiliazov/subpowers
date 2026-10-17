@@ -22,7 +22,8 @@ Find the exact commands that establish the claim.
 2. **No contract:** Discover the commands from the repository — CI workflows, Makefiles, package manifests. State the
    commands you intend to run and get approval before trusting their output.
 3. **Offer to write one:** If the contract is missing, offer exactly once to create it from the template shipped with
-   this plugin (`templates/subpowers.md` in the subpowers marketplace repo, not a path in this project). Do not nag.
+   this plugin: `../../templates/subpowers.md`, resolved from this skill's base directory, not from the project root.
+   Do not nag.
 4. **Stale contract:** A wrong command is worse than a missing one — a suite invoked the wrong way exits 0 and proves
    nothing. If a contract command fails because it no longer matches the repo, or names a port, path, or entry point
    that has since moved, fix the contract in the same pass. Do not route around it with a command of your own while
@@ -43,14 +44,15 @@ not. Never pipe straight into `tail` — the pipe hides the exit status.
 
 Partial runs do not count. A passing unit test is not a passing build. Run the full suite before you claim anything.
 
-| Claim              | Required evidence                                              |
-|:-------------------|:---------------------------------------------------------------|
-| "Tests pass"       | Terminal output showing zero failures across the entire suite. |
-| "No type errors"   | The `typecheck` command exits clean.                           |
-| "Bug is fixed"     | The specific reproducing test now passes.                      |
-| "Feature works"    | New tests pass AND the full suite is clean.                    |
-| "Ready for review" | Tests, typechecks, linters, and builds all pass.                |
-| "Plan complete"    | Same as above. Checked-off boxes are not evidence.             |
+| Claim              | Required evidence                                                                                   |
+|:-------------------|:----------------------------------------------------------------------------------------------------|
+| "Tests pass"       | Terminal output showing zero failures across the entire suite.                                      |
+| "No type errors"   | The `typecheck` command exits clean.                                                                |
+| "Bug is fixed"     | The specific reproducing test now passes.                                                           |
+| "Feature works"    | New tests pass AND the full suite is clean.                                                         |
+| "Matches design"   | Rendered side by side with the design at its own width(s); every difference fixed or user-approved. |
+| "Ready for review" | Tests, typechecks, linters, and builds all pass.                                                    |
+| "Plan complete"    | Same as above. Checked-off boxes are not evidence.                                                  |
 
 ## 4. Write evidence into the plan
 

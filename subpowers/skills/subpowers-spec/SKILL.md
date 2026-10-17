@@ -18,6 +18,11 @@ Establish the "what" and the "why" before a single file is touched. Do not decid
 
 * **Read the codebase first:** Read the existing models, schemas, and adjacent features — the spans that matter
   (`offset`/`limit`), not whole files. The spec must fit the reality of this codebase, not a generic guess.
+* **Find the design:** If a design covers this work — named in the contract's `## Design` section, linked by the
+  user, or attached to the conversation — read it before writing anything. It is the spec for whatever it shows:
+  derive the acceptance criteria from it, not from memory or taste. Anything the work needs that the design does not
+  show (a state, a screen, a breakpoint, a field) goes under **Additions to the design**, and each one is settled with
+  the user — drawn into the design first, or explicitly approved — before sign-off. Never fill a gap yourself.
 * **Batch your questions:** If requirements are ambiguous, resolve them in one round — up to 3 targeted,
   multiple-choice or yes/no questions in a single tool call. Do not ask about file layouts or library choices; those
   belong to `subpowers-plan`.
@@ -31,6 +36,9 @@ system.
 # <Feature Name> Spec
 
 **Goal:** <One sentence — the defining objective.>
+
+**Design:** <Source and version, and which part covers which criterion — or "none".>
+**Additions to the design:** <Each gap, and how the user settled it — omit if none.>
 
 **Acceptance Criteria:**
 

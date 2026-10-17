@@ -55,6 +55,16 @@ If this project does not want plan files on disk, say so here instead:
 `dir: none` — plans then stay in the conversation and `subpowers-plan`'s
 handoff-record guarantee is off.
 
+## Design
+
+- `source:` `<link or path: a Figma file, a design canvas, mockups under docs/design/>`
+- `covers:` `<which pages, screens or components it defines, and at which widths>`
+
+Designs listed here are binding specs, not inspiration. The skills read the
+relevant part before touching anything it covers, build it as drawn (structure,
+styles, copy, order), and ask before any deviation. Delete this section if the
+project has no designs.
+
 ## Evidence
 
 Extra claim → evidence rows specific to this project, appended to

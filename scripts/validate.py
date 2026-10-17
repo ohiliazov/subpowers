@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-"""Structural checks for the subpowers marketplace. No third-party deps.
-
-Run from the repo root:  python3 scripts/validate.py
-Exits non-zero on the first category of problem found, listing every instance.
-"""
-
 from __future__ import annotations
 
 import json
@@ -15,10 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PLUGIN = ROOT / "subpowers"
 SKILLS = PLUGIN / "skills"
-TEMPLATE = ROOT / "templates" / "subpowers.md"
+TEMPLATE = PLUGIN / "templates" / "subpowers.md"
 
-ROMAN = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}
-# Scoped forms are fine; whole-repo forms must be presented as prohibitions.
 DESTRUCTIVE = ("git reset --hard", "git restore .", "git clean -fd", "git checkout -- .")
 
 errors: list[str] = []
@@ -41,7 +33,6 @@ def frontmatter(text: str) -> str | None:
 
 
 def headings(text: str) -> list[str]:
-    """H2 headings outside fenced code blocks."""
     out, fenced = [], False
     for line in text.splitlines():
         if line.lstrip().startswith("```"):
@@ -61,7 +52,6 @@ def main() -> int:
     docs = {p: p.read_text() for p in ROOT.rglob("*.md") if ".git" not in p.parts}
     skill_docs = {p: t for p, t in docs.items() if p.name == "SKILL.md"}
 
-    # 1. manifests parse, carry required keys, and point at real directories
     check("manifests: JSON valid, required keys, sources exist")
     mp_path = ROOT / ".claude-plugin" / "marketplace.json"
     pl_path = PLUGIN / ".claude-plugin" / "plugin.json"
@@ -94,7 +84,6 @@ def main() -> int:
             if key not in pl:
                 fail(f"plugin.json: missing required key {key!r}")
 
-    # 2. VERSION agrees with plugin.json
     check("version: VERSION file agrees with plugin.json")
     vfile = ROOT / "VERSION"
     if not vfile.exists():
@@ -102,7 +91,6 @@ def main() -> int:
     elif pl is not None and vfile.read_text().strip() != pl.get("version"):
         fail(f"VERSION ({vfile.read_text().strip()!r}) != plugin.json version ({pl.get('version')!r})")
 
-    # 3. every skill has frontmatter whose name matches its directory
     check("skills: frontmatter present, name matches directory, description non-empty")
     for path, text in sorted(skill_docs.items()):
         rel, dirname = path.relative_to(ROOT), path.parent.name
@@ -122,54 +110,48 @@ def main() -> int:
         if not (d / "SKILL.md").exists():
             fail(f"{d.relative_to(ROOT)}: directory has no SKILL.md")
 
-    # 4. no reference to a skill that does not exist
     check("references: every `subpowers-<name>` mention resolves to a real skill")
     for path, text in sorted(docs.items()):
         for ref in sorted(set(re.findall(r"\bsubpowers-[a-z][a-z-]*", text))):
             if ref not in names:
                 fail(f"{path.relative_to(ROOT)}: references unknown skill {ref!r}")
 
-    # 5. cross-skill section citations resolve in the cited skill
     check("citations: `skill` Step N / §N point at a section that exists")
     for path, text in sorted(skill_docs.items()):
-        for ref, num in re.findall(r"`(subpowers-[a-z-]+)`(?:'s)?\s+(?:[Ss]tep|§)\s*([IVX]+|\d+)", text):
-            if ref not in names:
-                continue  # already reported by check 4
+        for ref, num in re.findall(r"`(subpowers-[a-z-]+)`(?:'s)?\s+(?:[Ss]tep|§)\s*(\d+)", text):
             target = SKILLS / ref / "SKILL.md"
-            if not target.exists():
+            if ref not in names or not target.exists():
                 continue
-            heads = headings(target.read_text())
-            token = num if num in ROMAN else num
-            if not any(h.startswith(f"{token}.") or f"Step {token}" in h for h in heads):
+            if not any(h.startswith(f"{num}.") for h in headings(target.read_text())):
                 fail(f"{path.relative_to(ROOT)}: cites {ref} Step/§ {num}, which has no such section")
 
-    # 6. contract/plan sections cited by skills exist in the template or in plan's own layout
     check("contract: every `## Section` cited by a skill is defined somewhere")
     defined = set(headings(TEMPLATE.read_text())) if TEMPLATE.exists() else set()
     if not TEMPLATE.exists():
         fail(f"{TEMPLATE.relative_to(ROOT)}: missing")
-    plan_text = (SKILLS / "subpowers-plan" / "SKILL.md")
-    plan_body = plan_text.read_text() if plan_text.exists() else ""
+    plan_path = SKILLS / "subpowers-plan" / "SKILL.md"
+    plan_body = plan_path.read_text() if plan_path.exists() else ""
     for path, text in sorted(skill_docs.items()):
         for sec in sorted(set(re.findall(r"`##\s+([^`]+)`", text))):
             sec = sec.strip()
-            if sec in defined:
+            if sec in defined or re.search(rf"^##\s+{re.escape(sec)}\s*$", plan_body, re.M):
                 continue
-            if re.search(rf"^##\s+{re.escape(sec)}\s*$", plan_body, re.M):
-                continue  # a plan-file section, defined by the plan template
             fail(f"{path.relative_to(ROOT)}: cites `## {sec}`, absent from the contract template and plan layout")
 
-    # 7. whole-repo destructive git commands only ever appear as prohibitions
+    check("template: every template path a skill cites resolves inside the installed plugin")
+    for path, text in sorted(skill_docs.items()):
+        for cited in sorted(set(re.findall(r"`([^`\s]*templates/[^`\s]+)`", text))):
+            target = (path.parent / cited).resolve()
+            if not target.is_file() or PLUGIN.resolve() not in target.parents:
+                fail(f"{path.relative_to(ROOT)}: template path {cited!r} does not resolve inside {PLUGIN.name}/")
+
     check("safety: whole-repo destructive git commands appear only as prohibitions")
     for path, text in sorted(docs.items()):
         for lineno, line in enumerate(text.splitlines(), 1):
             for cmd in DESTRUCTIVE:
                 if cmd in line and "forbidden" not in line.lower():
-                    fail(
-                        f"{path.relative_to(ROOT)}:{lineno}: {cmd!r} present without being marked forbidden"
-                    )
+                    fail(f"{path.relative_to(ROOT)}:{lineno}: {cmd!r} present without being marked forbidden")
 
-    # 8. hygiene
     check("hygiene: no trailing whitespace or tabs in skill files")
     for path, text in sorted(skill_docs.items()):
         for lineno, line in enumerate(text.splitlines(), 1):

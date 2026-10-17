@@ -42,7 +42,7 @@ The skills dictate the process. Your repo dictates the commands. The seam betwee
 `.claude/subpowers.md`** in the project root.
 
 ```bash
-cp <marketplace>/templates/subpowers.md <your-repo>/.claude/subpowers.md
+cp <marketplace>/subpowers/templates/subpowers.md <your-repo>/.claude/subpowers.md
 ```
 
 Fill in what applies and delete the rest:
@@ -52,6 +52,7 @@ Fill in what applies and delete the rest:
 | `## Commands`                        | `test`, `test-one`, `typecheck`, `lint`, `build` — run verbatim by Check, Implement, and Debug.                 |
 | `## Inspect`                         | Direct read-only state checks, strictly preferred over guessing or clicking through a UI.                       |
 | `## Plans`                           | Where plans are written and archived (`dir: none` opts out).                                          |
+| `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first.             |
 | `## Evidence`                        | Extra claim → evidence rows that a standard green suite doesn't cover.                                          |
 | `## Project rules`                   | The condensed, checkable form of your `CLAUDE.md` — applied during Implement's self-review. |
 | `## Reindex / regeneration triggers` | Changes that demand an out-of-band step someone must be told about.                                             |
@@ -80,7 +81,8 @@ python3 scripts/validate.py
 
 Checks the manifests parse and agree with `VERSION`, that each skill's frontmatter `name` matches its directory, that
 every `subpowers-<name>` mention resolves to a skill that exists, that cross-skill `Step N` citations point at real
-sections, that every `## Section` a skill cites is defined in the contract template or the plan layout, that whole-repo
-destructive git commands appear only as prohibitions, and that no skill file carries trailing whitespace or tabs.
+sections, that every `## Section` a skill cites is defined in the contract template or the plan layout, that every
+template path a skill cites resolves inside the installed plugin, that whole-repo destructive git commands appear only
+as prohibitions, and that no skill file carries trailing whitespace or tabs.
 
 Runs on every push and pull request via [`.github/workflows/validate.yml`](.github/workflows/validate.yml).

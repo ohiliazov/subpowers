@@ -22,6 +22,9 @@ Translate the spec into a file-by-file plan before code moves. This file becomes
 * **Re-check scope.** If the work collapses to 1-2 files, abandon this skill and route to `subpowers-implement`.
 * **Read before planning.** Read the actual files, interfaces, and callers *before* writing tasks — the relevant spans,
   not whole files. Do not plan against assumed architecture.
+* **Read the design.** If the spec names a design, or the contract's `## Design` section covers this work, read the
+  parts the tasks will build. A plan that paraphrases a design instead of pointing at it gets built from the
+  paraphrase.
 * **Batch your questions.** If architectural decisions remain open, ask up to 3 targeted questions in one tool call.
 
 ## 2. Where plans live
@@ -69,6 +72,11 @@ files — not the plan text again. With `dir: none`, the plan text itself goes i
 * **Tagging:** Mark every task `[independent]` or `[sequential]`. A task is `independent` only if it shares ZERO files
   and ZERO runtime state with any other task. Do not guess; if unsure, it is `sequential`.
 * **Commands:** Write the exact, executable test commands into the file. No placeholders.
+* **Design:** When a design exists, put it in the plan: its source and version in the header, and on every task that
+  builds something it shows, the exact part (`**Design:**` frame, artboard, screen). That task's first box re-reads
+  that part; its last box compares the result side by side with it at the design's own width. Tasks build only what
+  the design shows. Anything it lacks is a question for the user before the plan is approved, not a task that
+  invents it.
 
 ```markdown
 # <Feature Name> Implementation Plan
@@ -79,6 +87,7 @@ files — not the plan text again. With `dir: none`, the plan text itself goes i
      Append below it; never overwrite it. Absent when the plan was written directly. -->
 
 **Goal:** <One sentence, carried from the spec>
+**Design:** <Source and version — or "none">
 **Architecture:** <2-3 sentences>
 **Tech Stack:** <Key libs>
 
@@ -88,7 +97,9 @@ files — not the plan text again. With `dir: none`, the plan text itself goes i
 
 **Satisfies:** <Spec items>
 **Files:** Create `path/file`, Modify `path/file`
+**Design:** <The exact part this task builds — omit if none>
 
+- [ ] Re-read the design part (only when the task has one)
 - [ ] Test: `<exact_test_command>` → expect FAIL
 - [ ] Implement code
 - [ ] Verify: expect PASS
@@ -130,8 +141,8 @@ them re-litigates an approved plan.
   to repay a cold start; run small ones inline. If several would touch a shared file (an i18n file, a route table, a
   barrel export), run those sequentially instead.
     * *Dispatch payload:* the task section, the frontmatter (`suite_expected`, `deps`), the relevant `## Spec` and
-      `## Corrections` entries, and the exact test commands. A sub-agent that guesses at the test command reports a
-      result you cannot trust.
+      `## Corrections` entries, the task's design part, and the exact test commands. A sub-agent that guesses at the
+      test command reports a result you cannot trust.
     * *Return contract:* require touched files, the exact command run, its exit status, and the summary line plus
       failure excerpts (40 lines at most) — not "tests pass", and not a full log. Treat a report missing any of these
       as incomplete rather than filling the gap by assumption.
@@ -146,6 +157,9 @@ them re-litigates an approved plan.
   withholding your reasoning. This is the only pass that sees the whole phase at once, which is where cross-task
   inconsistency lives — each task looked correct in isolation, and the seam between them is what no single task's
   review covered.
+* **When the design and the work disagree:** the design is missing something, conflicts with the code, or cannot be
+  built as drawn. Stop and ask the user, naming the gap and the options. Do not decide it yourself, however small.
+  Log the user's answer in `## Corrections`; a deviation without a recorded approval is a defect.
 * **When an approach breaks down:** halt immediately. Do not improvise around it. Set `status: blocked`, define the
   `blocker`, log the reslice in `## Corrections`, and report before yielding.
 

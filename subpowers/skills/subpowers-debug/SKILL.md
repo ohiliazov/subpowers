@@ -21,7 +21,9 @@ Do not proceed until you can state: **"I know what is wrong and exactly where it
 3. **Check recent changes:** Run `git diff --stat HEAD~3`, then read the diff of only the files on the failing path.
 4. **Isolate the layer:** Log at each boundary (API → service → datastore). Run once to find which layer breaks before
    changing anything.
-5. **Check state directly:** Confirm state through terminal commands and datastore queries — the contract's
+5. **Know the expected result:** If a design covers the broken surface, it defines what correct looks like. Do not
+   fix toward your own idea of it.
+6. **Check state directly:** Confirm state through terminal commands and datastore queries — the contract's
    `## Inspect` section. Reserve the browser for failures that are genuinely visual.
 
 ## 2. Hypothesis
@@ -35,6 +37,8 @@ hypothesized — not a missing import, not a broken fixture.
 
 ## 4. Fix and verify
 
+* **Strip instrumentation:** Remove every log line added while isolating the layer. Diagnostic noise left in the
+  diff is not part of the fix.
 * **One change:** A single precise change targeting the root cause.
 * **Verify:** Run the failing test — it must pass. Then run the full suite via `subpowers-check`, with its §2 bounded
   output.
