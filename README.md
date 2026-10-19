@@ -70,19 +70,24 @@ A project-level `.claude/skills/subpowers-plan/` shadows nothing — plugin skil
 answering to the same purpose is confusion, not flexibility. Prefer changing the contract. Fork a skill into a repo only
 when that project's *process* genuinely differs, not just its commands.
 
-## License
-
-MIT — see [LICENSE](LICENSE).
 ## Validating changes
 
 ```bash
-python3 scripts/validate.py
+uvx prek install          # once: run the hooks on every commit
+uvx prek run --all-files  # on demand
 ```
 
-Checks the manifests parse and agree with `VERSION`, that each skill's frontmatter `name` matches its directory, that
-every `subpowers-<name>` mention resolves to a skill that exists, that cross-skill `Step N` citations point at real
-sections, that every `## Section` a skill cites is defined in the contract template or the plan layout, that every
-template path a skill cites resolves inside the installed plugin, that whole-repo destructive git commands appear only
-as prohibitions, and that no skill file carries trailing whitespace or tabs.
+The hooks run file hygiene, `ruff` on the scripts, and `scripts/validate.py`, which also runs alone as
+`python3 scripts/validate.py`. The validator checks the manifests parse and agree with `VERSION`, that each skill's
+frontmatter `name` matches its directory, that every `subpowers-<name>` mention resolves to a skill that exists, that
+cross-skill `Step N` citations point at real sections, that every `## Section` a skill cites is defined in the contract
+template or the plan layout, that every template path a skill cites resolves inside the installed plugin, that
+whole-repo destructive git commands appear only as prohibitions, and that no skill file carries trailing whitespace or
+tabs.
 
-Runs on every push and pull request via [`.github/workflows/validate.yml`](.github/workflows/validate.yml).
+CI runs the same hooks on every push and pull request via
+[`.github/workflows/validate.yml`](.github/workflows/validate.yml).
+
+## License
+
+MIT — see [LICENSE](LICENSE).

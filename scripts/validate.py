@@ -28,7 +28,7 @@ def check(label: str) -> None:
 
 
 def frontmatter(text: str) -> str | None:
-    m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+    m = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
     return m.group(1) if m else None
 
 
@@ -98,12 +98,12 @@ def main() -> int:
         if fm is None:
             fail(f"{rel}: no YAML frontmatter")
             continue
-        m = re.search(r"^name:\s*(\S+)", fm, re.M)
+        m = re.search(r"^name:\s*(\S+)", fm, re.MULTILINE)
         if not m:
             fail(f"{rel}: frontmatter has no name:")
         elif m.group(1) != dirname:
             fail(f"{rel}: name {m.group(1)!r} != directory {dirname!r}")
-        d = re.search(r"^description:\s*>?\s*\n?((?:.|\n)*?)(?=^\w+:|\Z)", fm, re.M)
+        d = re.search(r"^description:\s*>?\s*\n?((?:.|\n)*?)(?=^\w+:|\Z)", fm, re.MULTILINE)
         if not d or not d.group(1).strip():
             fail(f"{rel}: frontmatter has no description:")
     for d in skill_dirs:
@@ -134,7 +134,7 @@ def main() -> int:
     for path, text in sorted(skill_docs.items()):
         for sec in sorted(set(re.findall(r"`##\s+([^`]+)`", text))):
             sec = sec.strip()
-            if sec in defined or re.search(rf"^##\s+{re.escape(sec)}\s*$", plan_body, re.M):
+            if sec in defined or re.search(rf"^##\s+{re.escape(sec)}\s*$", plan_body, re.MULTILINE):
                 continue
             fail(f"{path.relative_to(ROOT)}: cites `## {sec}`, absent from the contract template and plan layout")
 
