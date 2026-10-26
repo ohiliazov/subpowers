@@ -84,6 +84,21 @@ def main() -> int:
             if key not in pl:
                 fail(f"plugin.json: missing required key {key!r}")
 
+    check("hooks: hooks.json valid, every command's script exists")
+    hooks_path = PLUGIN / "hooks" / "hooks.json"
+    if hooks_path.exists():
+        try:
+            hooks = json.loads(hooks_path.read_text())
+        except json.JSONDecodeError as exc:
+            fail(f"{hooks_path.relative_to(ROOT)}: invalid JSON — {exc}")
+            hooks = {}
+        for event, matchers in hooks.get("hooks", {}).items():
+            for matcher in matchers:
+                for hook in matcher.get("hooks", []):
+                    for script in re.findall(r"\$\{CLAUDE_PLUGIN_ROOT\}/([^\s\"']+)", hook.get("command", "")):
+                        if not (PLUGIN / script).is_file():
+                            fail(f"{hooks_path.relative_to(ROOT)}: {event} runs missing {script!r}")
+
     check("version: VERSION file agrees with plugin.json")
     vfile = ROOT / "VERSION"
     if not vfile.exists():
@@ -137,6 +152,15 @@ def main() -> int:
             if sec in defined or re.search(rf"^##\s+{re.escape(sec)}\s*$", plan_body, re.MULTILINE):
                 continue
             fail(f"{path.relative_to(ROOT)}: cites `## {sec}`, absent from the contract template and plan layout")
+
+    check("rules: the template documents references, every skill applying `## Project rules` resolves them")
+    if TEMPLATE.exists() and "`See <file> §<heading>`" not in TEMPLATE.read_text():
+        fail(f"{TEMPLATE.relative_to(ROOT)}: `## Project rules` does not document the `See <file> §<heading>` form")
+    for path, text in sorted(skill_docs.items()):
+        lines = text.splitlines()
+        for lineno, line in enumerate(lines, 1):
+            if "`## Project rules`" in line and "references" not in " ".join(lines[lineno - 1 : lineno + 1]):
+                fail(f"{path.relative_to(ROOT)}:{lineno}: applies `## Project rules` without resolving its references")
 
     check("template: every template path a skill cites resolves inside the installed plugin")
     for path, text in sorted(skill_docs.items()):

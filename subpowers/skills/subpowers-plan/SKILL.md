@@ -149,14 +149,14 @@ them re-litigates an approved plan.
     * *Plan-file ownership:* **the sub-agent is forbidden from editing the plan file.** The main thread writes state on
       its return, so two agents cannot clobber each other.
     * *Review the diff, not the report:* you did not write this code and you do not share the sub-agent's reasoning, so
-      review its actual diff against the contract's `## Project rules` before you tick the boxes. A report describes
-      what the sub-agent believes it did. Accepting the report in place of the diff is how a task closes green on work
-      nobody read.
+      review its actual diff against the contract's `## Project rules` and the sections it references before you
+      tick the boxes. A report describes what the sub-agent believes it did. Accepting the report in place of the diff
+      is how a task closes green on work nobody read.
 * **Phase close:** Before checking off a phase whose tasks you executed inline yourself, get eyes that are not yours on
-  the accumulated diff. Dispatch one sub-agent with `git diff` for the phase and the contract's `## Project rules`,
-  withholding your reasoning. This is the only pass that sees the whole phase at once, which is where cross-task
-  inconsistency lives — each task looked correct in isolation, and the seam between them is what no single task's
-  review covered.
+  the accumulated diff. Dispatch one sub-agent with `git diff` for the phase and the contract's `## Project rules`
+  with the sections it references pasted in, withholding your reasoning. This is the only pass that sees the whole
+  phase at once, which is where cross-task inconsistency lives — each task looked correct in isolation, and the seam
+  between them is what no single task's review covered.
 * **When the design and the work disagree:** the design is missing something, conflicts with the code, or cannot be
   built as drawn. Stop and ask the user, naming the gap and the options. Do not decide it yourself, however small.
   Log the user's answer in `## Corrections`; a deviation without a recorded approval is a defect.

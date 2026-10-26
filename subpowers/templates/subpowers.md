@@ -32,6 +32,19 @@ a build step that catches what the typechecker can't, a migration check, a
 codegen freshness check. If a claim can only be verified by that command, it
 belongs here, with a note saying which claim it backs.
 
+## Gates
+
+Commands the plugin's Stop hook runs before a turn may end, one backticked
+command per bullet, run from the repo root in order. They run only when the
+working tree's content differs from the last green run, so keep them to checks
+that are fast enough to run on every changed turn. A failing gate blocks the
+turn with the command's last 40 lines, once per tree state: stopping again on
+the same failing tree is allowed with a warning. The hook times out after 600 s.
+Gitignore `.claude/.gate-green` and `.claude/.gate-red`, where the hook keeps
+its state. Replace the placeholder below; an unfilled `<...>` bullet is skipped.
+
+- `<lint command>`
+
 ## Inspect
 
 Direct, read-only ways to confirm real state in this project — preferred over
@@ -79,8 +92,15 @@ Extra claim → evidence rows specific to this project, appended to
 
 The condensed, checkable form of this project's own conventions — whatever
 `CLAUDE.md`/`AGENTS.md`/the style guide says that a reviewer would flag. Group
-by area. `subpowers-implement`'s self-review applies this section verbatim, so
-this is the single copy.
+by area. `subpowers-implement`'s self-review applies this section verbatim.
+
+When the rule already lives in a file the agent reads anyway, point at it
+instead of copying it: a line `See <file> §<heading>` stands for that whole
+section, read in full wherever this section is applied. A copy drifts from its
+source; a reference cannot. Keep checklist items here only for rules that have
+no other home.
+
+- See `CLAUDE.md` §Rules
 
 ### Consistency
 

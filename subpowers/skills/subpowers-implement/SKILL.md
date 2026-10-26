@@ -59,8 +59,9 @@ Before declaring the work done, check it against these standards:
   more than 2 files, route to `subpowers-plan`.
 * **Design fidelity:** If a design covers the change, compare the rendered result with it side by side. Every
   difference is either fixed or approved by the user — none is explained away.
-* **Consistency:** Check the contract's `## Project rules`. If you made one location consistent but left an adjacent,
-  equally applicable location untouched, you have created a fresh bug. Fix it.
+* **Consistency:** Check the contract's `## Project rules`, reading every section it references in full. If you made
+  one location consistent but left an adjacent, equally applicable location untouched, you have created a fresh bug.
+  Fix it.
 * **Out-of-band steps:** Check `## Reindex / regeneration triggers`. If your change requires a cache flush, a search
   reindex, a client regeneration, or a backfill, announce it.
 
@@ -72,8 +73,8 @@ inconsistent. On those you will agree with yourself.
 
 **Escalation.** When the change turns on judgment rather than the checklist — a new abstraction, a refactor, a
 consistency call across several files — do not settle for this pass. Dispatch a sub-agent with the diff
-(`git diff HEAD`), the contract's `## Project rules`, and nothing else: no reasoning, no justification, no summary of
-what you were trying to achieve. Context is what compromises a reviewer, so withhold it. Require findings ranked
+(`git diff HEAD`), the contract's `## Project rules` with the sections it references pasted in, and nothing else: no
+reasoning, no justification, no summary of what you were trying to achieve. Context is what compromises a reviewer, so withhold it. Require findings ranked
 Critical / Important / Minor, and act on them before step 4.
 
 ## 4. Final verification

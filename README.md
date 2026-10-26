@@ -50,11 +50,12 @@ Fill in what applies and delete the rest:
 | Section                              | How the skills use it                                                                                          |
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------|
 | `## Commands`                        | `test`, `test-one`, `typecheck`, `lint`, `build` — run verbatim by Check, Implement, and Debug.                 |
+| `## Gates`                           | Commands the Stop hook runs before a turn may end, whenever the tree changed since the last green run.          |
 | `## Inspect`                         | Direct read-only state checks, strictly preferred over guessing or clicking through a UI.                       |
 | `## Plans`                           | Where plans are written and archived (`dir: none` opts out).                                          |
 | `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first.             |
 | `## Evidence`                        | Extra claim → evidence rows that a standard green suite doesn't cover.                                          |
-| `## Project rules`                   | The condensed, checkable form of your `CLAUDE.md` — applied during Implement's self-review. |
+| `## Project rules`                   | Checklist items, or `See <file> §<heading>` references to the rules where they already live — applied during Implement's self-review. |
 | `## Reindex / regeneration triggers` | Changes that demand an out-of-band step someone must be told about.                                             |
 
 Without a contract, the skills still function: they discover commands from the package manifest, `Makefile`, and CI
@@ -70,6 +71,18 @@ A project-level `.claude/skills/subpowers-plan/` shadows nothing — plugin skil
 answering to the same purpose is confusion, not flexibility. Prefer changing the contract. Fork a skill into a repo only
 when that project's *process* genuinely differs, not just its commands.
 
+## The Gate Hook
+
+The skills can only ask for evidence; the plugin's Stop hook enforces it. When a turn ends, `hooks/gate.py` reads the
+contract's `## Gates`, fingerprints the working tree's content (tracked and untracked non-ignored files, independent of commits), and runs the
+gates only if that fingerprint differs from the last green one. A failure blocks the turn and hands the agent the
+command and its last 40 lines. Each failing tree is reported once: stopping again on it, including on a turn that
+changed nothing, is allowed with a warning rather than looping. The repo is `CLAUDE_PROJECT_DIR`, so a `cd` elsewhere
+does not move the gate. The hook times out after 600 s. No contract, or no `## Gates`, and the hook does nothing.
+
+The gates are shell commands from the repo's own contract and run at every changed Stop with no prompt, like any
+project hook: enable the plugin only in repos whose contract you trust.
+
 ## Validating changes
 
 ```bash
@@ -78,10 +91,13 @@ uvx prek run --all-files  # on demand
 ```
 
 The hooks run file hygiene, `ruff` on the scripts, and `scripts/validate.py`, which also runs alone as
-`python3 scripts/validate.py`. The validator checks the manifests parse and agree with `VERSION`, that each skill's
+`python3 scripts/validate.py`. The gate hook's tests run with `uvx --with pytest pytest tests` locally and in CI. The
+validator checks the manifests parse and agree with `VERSION`, that the hooks manifest parses and every script it
+runs exists, that each skill's
 frontmatter `name` matches its directory, that every `subpowers-<name>` mention resolves to a skill that exists, that
 cross-skill `Step N` citations point at real sections, that every `## Section` a skill cites is defined in the contract
-template or the plan layout, that every template path a skill cites resolves inside the installed plugin, that
+template or the plan layout, that the template documents `## Project rules` references and every skill applying that
+section resolves them, that every template path a skill cites resolves inside the installed plugin, that
 whole-repo destructive git commands appear only as prohibitions, and that no skill file carries trailing whitespace or
 tabs.
 
