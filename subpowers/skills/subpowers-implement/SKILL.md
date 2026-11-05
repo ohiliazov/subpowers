@@ -18,7 +18,8 @@ This skill makes small, localized changes. Do not design architecture here.
 
 Do not run heavy process for a two-line fix, and do not skip it when the scope grows past 1-2 files.
 
-* **Check for an existing plan:** If this work belongs to one, read its frontmatter first. Plans live in the directory
+* **Check for an existing plan:** If this work belongs to one, read its frontmatter first, then only the sections you
+  need, as `subpowers-plan` §2 says. Plans live in the directory
   named by `.claude/subpowers.md`'s `## Plans` section — the contract names the location, it is not itself the plan.
   Your entry point is `next_task`, never the first unchecked box. Do not re-verify completed work.
 * **Check for a design:** If the plan, the contract's `## Design` section, or the user names a design for what you

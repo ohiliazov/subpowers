@@ -26,6 +26,8 @@ change; a raw command pasted into this file silently goes stale.
 | `lint` | `<linter/formatter check>` | |
 | `build` | `<production build>` | |
 | `run` | `<start the app locally>` | |
+| `doc-outline` | `<print a doc's headings with line numbers, <file> placeholder>` | Read before any plan or long doc; omit to fall back to `grep -n '^#'` |
+| `doc-section` | `<print one section of a doc, <file> "<heading>" placeholders>` | Reads one plan section instead of the whole file |
 
 Add a row for any check that is **load-bearing but not implied** by the others —
 a build step that catches what the typechecker can't, a migration check, a

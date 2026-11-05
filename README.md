@@ -49,10 +49,10 @@ Fill in what applies and delete the rest:
 
 | Section                              | How the skills use it                                                                                          |
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------|
-| `## Commands`                        | `test`, `test-one`, `typecheck`, `lint`, `build` — run verbatim by Check, Implement, and Debug.                 |
+| `## Commands`                        | `test`, `test-one`, `typecheck`, `lint`, `build` — run verbatim by Check, Implement, and Debug. Optional `doc-outline` and `doc-section` let Plan read a plan's headings and one section at a time. |
 | `## Gates`                           | Commands the Stop hook runs before a turn may end, whenever the tree changed since the last green run.          |
 | `## Inspect`                         | Direct read-only state checks, strictly preferred over guessing or clicking through a UI.                       |
-| `## Plans`                           | Where plans are written and archived (`dir: none` opts out).                                          |
+| `## Plans`                           | Where plans are written and archived (`dir: none` opts out). Plans are found by a grep over their state blocks, read outline-first, and the archive stays closed unless asked. |
 | `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first.             |
 | `## Evidence`                        | Extra claim → evidence rows that a standard green suite doesn't cover.                                          |
 | `## Project rules`                   | Checklist items, or `See <file> §<heading>` references to the rules where they already live — applied during Implement's self-review. |
@@ -96,7 +96,7 @@ validator checks the manifests parse and agree with `VERSION`, that the hooks ma
 runs exists, that each skill's
 frontmatter `name` matches its directory, that every `subpowers-<name>` mention resolves to a skill that exists, that
 cross-skill `Step N` citations point at real sections, that every `## Section` a skill cites is defined in the contract
-template or the plan layout, that the template documents `## Project rules` references and every skill applying that
+template or the plan layout, that every contract command a skill cites is a row in the template's `## Commands`, that the template documents `## Project rules` references and every skill applying that
 section resolves them, that every template path a skill cites resolves inside the installed plugin, that
 whole-repo destructive git commands appear only as prohibitions, and that no skill file carries trailing whitespace or
 tabs.

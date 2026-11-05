@@ -36,6 +36,12 @@ Translate the spec into a file-by-file plan before code moves. This file becomes
 * **Append, never overwrite:** If `subpowers-spec` already created the plan file with frontmatter and a `## Spec`
   section, **do not overwrite it**. Append your Goal, Architecture, and Task sections below the existing `## Spec`
   heading, and update the frontmatter.
+* **Find by frontmatter:** Pick the plan with one grep over the state blocks (`grep -l '^status: in_progress'
+  <plans_dir>/*.md`), then open only that file.
+* **Outline first, then sections:** Never read a whole plan. Run the contract's `doc-outline` on it (without one,
+  `grep -n '^#' <file>`), then read only the sections you need with the contract's `doc-section`, or by line range.
+* **The archive is closed:** Never list, grep or open the `archive` directory unless the user asks about archived
+  work.
 
 ## 3. State block
 
@@ -54,6 +60,10 @@ updated: YYYY-MM-DD
 ---
 ```
 
+* **Status values are exact:** write only the four `status` values above. `done`, `completed` or `implemented` break
+  the one grep that finds a plan by its state.
+* **No counters:** never add a field that restates the checkboxes, such as an open-task count. It drifts from the boxes;
+  `doc-outline` or a grep for `- [ ]` gives the live number.
 * **Vocabulary:** `[ ]` pending · `[x]` done · `[~]` deferred by a decision, reason inline.
 * **Ordering is not deferral:** an item merely gated by task order (`[after E2]`, `depends on F1`) stays `[ ]`. It will
   be actioned normally when its turn comes; marking it `[~]` forces a future session to ask permission for ordinary
@@ -126,9 +136,9 @@ in place and ask again.
 When entering a session with a plan already written, start here, not at step 1. Steps 1-5 already happened; redoing
 them re-litigates an approved plan.
 
-1. Read only the first 15 lines (the frontmatter).
-2. Read `## Spec` and `## Corrections` — settled decisions, and where the plan's prose has been overtaken.
-3. Read the specific task named by `next_task`, not the whole plan.
+1. Read only the first 15 lines (the frontmatter), then its outline (§2).
+2. Read the `## Spec` and `## Corrections` sections — settled decisions, and where the plan's prose has been overtaken.
+3. Read the section of the task named by `next_task`, not the whole plan.
 4. **Do not re-verify `[x]` items** unless a failure implicates them.
 5. If `status: blocked`, address the blocker or report it and stop. Never route around a recorded blocker silently.
 

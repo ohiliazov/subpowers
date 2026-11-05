@@ -153,6 +153,16 @@ def main() -> int:
                 continue
             fail(f"{path.relative_to(ROOT)}: cites `## {sec}`, absent from the contract template and plan layout")
 
+    check("commands: every contract command key a skill cites is a row in the template's `## Commands`")
+    template_text = TEMPLATE.read_text() if TEMPLATE.exists() else ""
+    keys = set(re.findall(r"^\|\s*`([a-z][a-z-]*)`\s*\|", template_text, re.MULTILINE))
+    for path, text in sorted(skill_docs.items()):
+        for key in sorted(set(re.findall(r"contract's\s+`([a-z][a-z-]*)`", text))):
+            if key not in keys:
+                fail(
+                    f"{path.relative_to(ROOT)}: cites contract command `{key}`, absent from the template's `## Commands`"
+                )
+
     check("rules: the template documents references, every skill applying `## Project rules` resolves them")
     if TEMPLATE.exists() and "`See <file> §<heading>`" not in TEMPLATE.read_text():
         fail(f"{TEMPLATE.relative_to(ROOT)}: `## Project rules` does not document the `See <file> §<heading>` form")
