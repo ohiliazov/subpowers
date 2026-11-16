@@ -53,6 +53,7 @@ Partial runs do not count. A passing unit test is not a passing build. Run the f
 | "Matches design"   | Rendered side by side with the design at its own width(s); every difference fixed or user-approved. |
 | "Ready for review" | Tests, typechecks, linters, and builds all pass.                                                    |
 | "Plan complete"    | Same as above. Checked-off boxes are not evidence.                                                  |
+| "Meets the goal"   | Built result on real data, reassessed against the spec's Goal; gaps reported, user approves.        |
 
 ## 4. Write evidence into the plan
 

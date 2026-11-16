@@ -27,7 +27,19 @@ Establish the "what" and the "why" before a single file is touched. Do not decid
   multiple-choice or yes/no questions in a single tool call. Do not ask about file layouts or library choices; those
   belong to `subpowers-plan`.
 
-## 2. Write the spec
+## 2. Challenge the idea
+
+The idea as given is a starting point, not the spec.
+
+1. **Research the users:** What the idea means to the people who use the product: what they come for, what they
+   already get elsewhere in it, what the idea changes for them.
+2. **Assess:** A good idea is made better; say how. A weak idea is explained (what it costs, what it breaks) and
+   replaced by a better one.
+3. **Diverge:** Propose 2–3 other approaches to the same idea, at least one of them unexpected (a different form,
+   model or interaction, not a variation). Approaches to the given idea only, never extra features.
+4. **Name the goal:** The chosen approach's goal is the yardstick the built result is reassessed against.
+
+## 3. Write the spec
 
 Present it directly in the chat. **Write nothing to disk at this stage.** A rejected spec must never reach the file
 system.
@@ -36,6 +48,7 @@ system.
 # <Feature Name> Spec
 
 **Goal:** <One sentence — the defining objective.>
+**Approaches:** <The chosen one and why; the others considered, one line each.>
 
 **Design:** <Source and version, and which part covers which criterion — or "none".>
 **Additions to the design:** <Each gap, and how the user settled it — omit if none.>
@@ -72,12 +85,12 @@ partial view reads as deliberate.)*
   instead of drawing a useless diagram.
 * **Edge cases:** Define error conditions, empty and boundary states, and the exact expected behavior of each.
 
-## 3. Sign-off
+## 4. Sign-off
 
 Present the spec and require explicit approval. Do not route to planning or implementation on the strength of your own
 spec. If it is rejected, revise it in the chat and ask again.
 
-## 4. Routing
+## 5. Routing
 
 Once the spec is approved, route it by scope:
 
