@@ -99,11 +99,18 @@ handoff-record guarantee is off.
 
 - `source:` `<link or path: a Figma file, a design canvas, mockups under docs/design/>`
 - `covers:` `<which pages, screens or components it defines, and at which widths>`
+- `preferences:` `<the owner's confirmed design taste, read in full before any round>`
+- `decisions:` `<where a page's design decisions are recorded, e.g. docs/design/<page>/decisions.md>`
+- `primitives:` `<the one board holding every approved primitive component>`
+- `icons:` `<the one board holding every approved icon>`
+- `labels:` `<badge text for created, selected and approved boards>`
 
 Designs listed here are binding specs, not inspiration. The skills read the
 relevant part before touching anything it covers, build it as drawn (structure,
-styles, copy, order), and ask before any deviation. Delete this section if the
-project has no designs.
+styles, copy, order), and ask before any deviation. `subpowers-design` reads the
+rest when it draws: one canvas per page, the shared primitives and icons boards
+looked at first, and every board badged with its state. Delete this section if
+the project has no designs.
 
 ## Evidence
 

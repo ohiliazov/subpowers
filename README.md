@@ -1,7 +1,7 @@
 # Subpowers
 
-A workflow for coding agents that refuses to skip steps: **explore → spec → plan →
-implement → debug → check**. Six skills, one rule each, and a hard line between "I think this works"
+A workflow for coding agents that refuses to skip steps: **explore → spec → design → plan →
+implement → debug → check**. Seven skills, one rule each, and a hard line between "I think this works"
 and "I ran the command and read the output".
 
 Installable as a Claude Code plugin marketplace, so it follows you across machines and projects instead of living in one
@@ -16,12 +16,13 @@ claude plugin install subpowers@subpowers
 
 Install at **user scope** to get the skills in every project.
 
-## The Six Skills
+## The Seven Skills
 
 | Skill                 | The Rule                                                   | Invoke when...                                                           |
 |:----------------------|:-----------------------------------------------------------|:-------------------------------------------------------------------------|
 | `subpowers-explore`   | Read-only. No writes, no code changes.                     | You need to know "how X works" without triggering code changes or plans. |
 | `subpowers-spec`      | Lock the *what* and *why* before anything touches files.   | The goal or the definition of "done" is still fuzzy.                     |
+| `subpowers-design`    | Page first; every board badged; finish with approved only. | A page or component needs drawing, or a canvas has comments to answer.    |
 | `subpowers-plan`      | Scope and sequence multi-file work in writing before code. | The change spans several files or systems.                               |
 | `subpowers-implement` | Red → green → refactor, then review.                       | 1–2 files, purpose already clear.                                        |
 | `subpowers-debug`     | Expose the root cause before changing code. 3-strike limit. | A test fails or behavior is wrong and you don't know why.                |
@@ -54,7 +55,7 @@ Fill in what applies and delete the rest:
 | `## Guards`                          | Tool calls the PreToolUse hook denies, puts to the user or allows, ahead of the plugin's default guards.         |
 | `## Inspect`                         | Direct read-only state checks, strictly preferred over guessing or clicking through a UI.                       |
 | `## Plans`                           | Where plans are written and archived (`dir: none` opts out). Plans are found by a grep over their state blocks, read outline-first, and the archive stays closed unless asked. |
-| `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first.             |
+| `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first. Also the taste file, the decisions record, the shared primitives and icons boards and the state badges `subpowers-design` draws with. |
 | `## Evidence`                        | Extra claim → evidence rows that a standard green suite doesn't cover.                                          |
 | `## Project rules`                   | Checklist items, or `See <file> §<heading>` references to the rules where they already live — applied during Implement's self-review. |
 | `## Reindex / regeneration triggers` | Changes that demand an out-of-band step someone must be told about.                                             |
@@ -123,7 +124,8 @@ validator checks the manifests parse and agree with `VERSION`, that the hooks ma
 runs exists, that each skill's
 frontmatter `name` matches its directory, that every `subpowers-<name>` mention resolves to a skill that exists, that
 cross-skill `Step N` citations point at real sections, that every `## Section` a skill cites is defined in the contract
-template or the plan layout, that every contract command a skill cites is a row in the template's `## Commands`, that the template documents `## Project rules` references and every skill applying that
+template or the plan layout, that every contract command a skill cites is a row in the template's `## Commands`, that every contract `key:` a
+skill cites is a bullet key in the template, that the template documents `## Project rules` references and every skill applying that
 section resolves them, that every template path a skill cites resolves inside the installed plugin, that
 whole-repo destructive git commands appear only as prohibitions, that every default guard parses and its regexes
 compile, and that no skill file carries trailing whitespace or

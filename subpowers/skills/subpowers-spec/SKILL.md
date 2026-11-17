@@ -94,6 +94,8 @@ spec. If it is rejected, revise it in the chat and ask again.
 
 Once the spec is approved, route it by scope:
 
+* **Needs drawing first (a page or a component with no approved design):** route to `subpowers-design`, carrying the
+  spec's goal as its yardstick. Once the design is finished it routes on to plan or implement, below.
 * **Complex (multiple files or systems):**
     1. Write the spec to `<plans_dir>/<slug>.md` — the directory named by `.claude/subpowers.md`'s `## Plans` section,
        defaulting to `docs/subpowers/plans/`.
