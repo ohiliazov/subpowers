@@ -1,12 +1,10 @@
 # Subpowers contract
 
-<!--
 Copy this file to `.claude/subpowers.md` in a project root and fill it in.
 The subpowers-* skills read it instead of hardcoding any stack. Every command
 below is run verbatim, so paste commands you have actually run in this repo.
 Delete any section that doesn't apply — an absent section is handled; a wrong
 command is not.
--->
 
 ## Commands
 
@@ -46,6 +44,33 @@ Gitignore `.claude/.gate-green` and `.claude/.gate-red`, where the hook keeps
 its state. Replace the placeholder below; an unfilled `<...>` bullet is skipped.
 
 - `<lint command>`
+
+## Review
+
+Rule files the plugin's review hook judges every finished turn against, one
+backticked path per bullet, relative to the repo root. Every `CLAUDE.md` above
+the repo up to `~`, and `~/.claude/CLAUDE.md`, are added automatically. An
+optional `model: <name>` bullet picks the judge (default `sonnet`). A violation
+blocks the turn once with the rule and the reason. Delete this section to turn
+the review off; an unfilled `<...>` bullet is skipped.
+
+- `CLAUDE.md`
+
+## Guards
+
+Tool calls the plugin's PreToolUse hook stops before they run: the unskippable
+form of a rule a tool call can break. One bullet per guard,
+`- <deny|ask|allow> `<tool regex>` `<input regex>` — <reason>`. The tool regex
+must match the whole tool name; the input regex is searched in the call's input
+as JSON (`{"command": "git push"}`). The first matching guard wins: `deny`
+blocks the call and hands the agent the reason, `ask` puts it to the user,
+`allow` lets it through. Put narrower guards above broader ones.
+
+These run before the plugin's default guards (`hooks/guards.md`: force-push,
+whole-repo destructive git, installs, the plan archive, whole-plan reads), so an
+`allow` here overrides a default. An unfilled `<...>` bullet is skipped.
+
+- ask `<tool>` `<input regex>` — <reason>
 
 ## Inspect
 

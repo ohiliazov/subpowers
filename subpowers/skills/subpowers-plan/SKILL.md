@@ -140,7 +140,11 @@ them re-litigates an approved plan.
 2. Read the `## Spec` and `## Corrections` sections — settled decisions, and where the plan's prose has been overtaken.
 3. Read the section of the task named by `next_task`, not the whole plan.
 4. **Do not re-verify `[x]` items** unless a failure implicates them.
-5. If `status: blocked`, address the blocker or report it and stop. Never route around a recorded blocker silently.
+5. If `status: blocked`, re-check the blocker's condition. If it still holds, report it with its current state and
+   stop. A generic instruction such as "implement the plan" or "continue" does not lift a blocker; only the user
+   naming it does. Never route around a recorded blocker silently.
+6. If no plan is active and every explicit request is done, "continue" means report that and ask what is next. Name
+   the plan task or request any work advances before starting it; never pick self-chosen work.
 
 ## 7. Execute
 

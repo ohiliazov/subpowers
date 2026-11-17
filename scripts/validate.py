@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parent.parent
 PLUGIN = ROOT / "subpowers"
 SKILLS = PLUGIN / "skills"
 TEMPLATE = PLUGIN / "templates" / "subpowers.md"
+DEFAULT_GUARDS = PLUGIN / "hooks" / "guards.md"
+GUARD_LINE = re.compile(r"^- (deny|ask|allow) `([^`]+)` `([^`]+)` — .+$")
 
 DESTRUCTIVE = ("git reset --hard", "git restore .", "git clean -fd", "git checkout -- .")
 
@@ -185,6 +187,20 @@ def main() -> int:
             for cmd in DESTRUCTIVE:
                 if cmd in line and "forbidden" not in line.lower():
                     fail(f"{path.relative_to(ROOT)}:{lineno}: {cmd!r} present without being marked forbidden")
+
+    check("guards: every default guard is a well-formed bullet whose regexes compile")
+    for lineno, line in enumerate(DEFAULT_GUARDS.read_text().splitlines(), 1):
+        if not line.startswith("- "):
+            continue
+        match = GUARD_LINE.match(line)
+        if not match:
+            fail(f"{DEFAULT_GUARDS.relative_to(ROOT)}:{lineno}: not `- <deny|ask|allow> `tool` `pattern` — reason`")
+            continue
+        for regex in (match.group(2), re.sub(r"\{(plans|archive)\}", "x", match.group(3))):
+            try:
+                re.compile(regex)
+            except re.error as exc:
+                fail(f"{DEFAULT_GUARDS.relative_to(ROOT)}:{lineno}: {regex!r} does not compile: {exc}")
 
     check("hygiene: no trailing whitespace or tabs in skill files")
     for path, text in sorted(skill_docs.items()):
