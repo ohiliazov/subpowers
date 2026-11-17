@@ -14,14 +14,14 @@ description: >
 # Design
 
 <directives>
-A canvas records decisions; it is not a scrapbook. Every board has exactly one state, and a finished canvas holds only approved boards. Design the page, never a component alone. Primitives and icons come from their boards first; a missing one is announced in chat and on the canvas.
+A canvas records decisions; it is not a scrapbook. Every board has exactly one state, and a finished canvas holds only approved boards. Design the page, never a component alone. Primitives come from the primitives table and icons from the icons board first; a missing one is announced in chat and on the canvas.
 </directives>
 
 ## 1. Ground the round
 
 * **Contract:** Read `.claude/subpowers.md`'s `## Design` section: `source:` (where each page's canvas lives),
-  `preferences:` (the owner's confirmed taste), `decisions:` (where a page's decisions are recorded), `primitives:` and
-  `icons:` (the two shared boards) and `labels:` (badge text per state). With no contract, find them in the repo, state
+  `preferences:` (the owner's confirmed taste), `decisions:` (where a page's decisions are recorded), `primitives:` (the
+  table of shared components), `icons:` (the shared icons board) and `labels:` (badge text per state). With no contract, find them in the repo, state
   them, and get them confirmed once before the first round.
 * **Read before drawing:** the preferences file in full, the page's decisions record, the canvas's current boards, and
   every open comment thread on it. All comments first, then the work.
@@ -36,7 +36,7 @@ A canvas records decisions; it is not a scrapbook. Every board has exactly one s
 ## 2. Canvas structure
 
 * **One page, one canvas.** Everything designed for a page lives on that page's canvas. A component never gets a canvas
-  of its own; the only shared canvases are the primitives board and the icons board.
+  of its own; the only shared canvas is the icons board. Primitives are a table, and a table never goes on a canvas.
 * **Areas:** a page canvas has the page layout (desktop and phone), approved components grouped together, and a work
   area holding the current round and the board it builds on. Sticky notes explain each round.
 * **A board is a pair:** a desktop board and its phone board share one name, one state and one badge.
@@ -70,18 +70,20 @@ A canvas records decisions; it is not a scrapbook. Every board has exactly one s
 ## 4. Primitives and icons
 
 * **What a primitive is:** a reusable component that more than one board builds on (a marker, a pill, a band, a row),
-  with one target file in code. The primitives board shows each one rendered, as the reader would see it, so a board
-  can copy its markup. A list of names and files is not a primitives board.
-* **Look there first:** before drawing any element, look for it on the primitives board; before drawing any icon, look
-  on the icons board. Reuse it exactly (same paths, tokens, sizes), copying everything it depends on (hidden
-  definitions, colour classes), and render it once before showing it.
+  with one target file in code. The primitives table has one row per file: what it is, the page canvases that draw it,
+  notes. It lives in a file made for tables (Markdown, CSV), never on a canvas: a table on a canvas is a misuse of the
+  tool. Rendered copies stay on the page canvases the table names.
+* **Look there first:** before drawing any element, find it in the primitives table and copy its rendered markup from a
+  canvas the table names, or convert it from its code file when no canvas draws it; before drawing any icon, look on
+  the icons board. Reuse it exactly (same paths, tokens, sizes), copying everything it depends on (hidden definitions,
+  colour classes), and render it once before showing it.
 * **Missing primitive:** draw it on the board that needs it, put a warning on that board naming the missing primitive,
   and say so in chat in the same message that links the board. Both, every time.
 * **Missing icon:** the same, with the warning on the icons canvas as well as on the board that needs it. A new icon is
   derived from the closest approved icon family, never drawn from nothing.
-* **Copied on approval:** when the board that introduced a primitive or an icon is approved, the primitive or icon is
-  copied onto the primitives or icons board in the same change, named by its target in code, and its warnings are
-  removed. The two shared boards hold approved items only.
+* **Recorded on approval:** when the board that introduced a primitive is approved, its row goes into the primitives
+  table in the same change, named by its target in code with the canvas that draws it; an approved icon is copied onto
+  the icons board. Its warnings are removed. The table and the icons board hold approved items only.
 
 ## 5. Phases
 

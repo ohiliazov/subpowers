@@ -55,7 +55,7 @@ Fill in what applies and delete the rest:
 | `## Guards`                          | Tool calls the PreToolUse hook denies, puts to the user or allows, ahead of the plugin's default guards.         |
 | `## Inspect`                         | Direct read-only state checks, strictly preferred over guessing or clicking through a UI.                       |
 | `## Plans`                           | Where plans are written and archived (`dir: none` opts out). Plans are found by a grep over their state blocks, read outline-first, and the archive stays closed unless asked. |
-| `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first. Also the taste file, the decisions record, the shared primitives and icons boards and the state badges `subpowers-design` draws with. |
+| `## Design`                          | Binding designs and what they cover — read before building, built as drawn, deviations asked first. Also the taste file, the decisions record, the primitives table, the icons board and the state badges `subpowers-design` draws with. |
 | `## Evidence`                        | Extra claim → evidence rows that a standard green suite doesn't cover.                                          |
 | `## Project rules`                   | Checklist items, or `See <file> §<heading>` references to the rules where they already live — applied during Implement's self-review. |
 | `## Reindex / regeneration triggers` | Changes that demand an out-of-band step someone must be told about.                                             |
