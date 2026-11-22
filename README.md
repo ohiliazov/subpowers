@@ -106,8 +106,9 @@ default. An `ask` asks once per session: when the user approves it and the call 
 that guard for the session, and its later matches go through without a prompt. A new session asks again.
 
 The defaults hold in every repo, contract or not: no force-push, no whole-repo destructive git, no install without a
-prompt. With a `## Plans` directory they also keep the archive closed unless the user approves, and stop a plan being
-read whole instead of outline-first. Use contract guards for the project's own rules a single tool call breaks; rules
+prompt. With a `## Plans` directory they also keep the archive closed to reading unless the user approves (moving a
+finished plan into it, or excluding it from a search, needs no prompt), and stop a plan being read whole instead of
+outline-first. Use contract guards for the project's own rules a single tool call breaks; rules
 that need judgment belong to the review hook.
 
 ## Validating changes

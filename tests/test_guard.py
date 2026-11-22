@@ -120,3 +120,11 @@ def test_an_approved_ask_guard_allows_for_the_rest_of_its_session(tmp_path: Path
     assert "approved earlier this session" in again["permissionDecisionReason"]
     assert hook(repo, state, "PreToolUse", "s2", "Bash", command="git push origin main")["permissionDecision"] == "ask"
     assert hook(repo, state, "PreToolUse", "s1", "Bash", command="git push -f")["permissionDecision"] == "deny"
+
+
+def test_archiving_a_plan_or_excluding_the_archive_needs_no_prompt(tmp_path: Path) -> None:
+    plain_contract(tmp_path, "## Plans\n\n- `dir:` `docs/plans/`\n- `archive:` `docs/plans/archive/<slug>/`\n")
+    assert call(tmp_path, "Bash", command="git mv docs/plans/a.md docs/plans/archive/2026-a.md") is None
+    assert call(tmp_path, "Bash", command="git grep -n plan -- ':!docs/plans/archive'") is None
+    assert call(tmp_path, "Bash", command="cat docs/plans/archive/2026-a.md")["permissionDecision"] == "ask"
+    assert call(tmp_path, "Bash", command="grep -rn x docs/plans/archive")["permissionDecision"] == "ask"
