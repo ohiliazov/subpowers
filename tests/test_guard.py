@@ -94,3 +94,29 @@ def test_plan_guards_follow_the_plans_dir(tmp_path: Path) -> None:
 def test_no_contract_still_gets_defaults(tmp_path: Path) -> None:
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
     assert call(tmp_path, "Bash", command="git push -f")["permissionDecision"] == "deny"
+
+
+def hook(repo: Path, state: Path, event: str, session: str, tool: str, **inputs: object) -> dict | None:
+    payload = json.dumps(
+        {"cwd": str(repo), "hook_event_name": event, "session_id": session, "tool_name": tool, "tool_input": inputs}
+    )
+    env = {**os.environ, "CLAUDE_PROJECT_DIR": str(repo), "SUBPOWERS_STATE_DIR": str(state)}
+    result = subprocess.run(
+        [sys.executable, str(GUARD)], check=True, input=payload, capture_output=True, text=True, env=env
+    )
+    return json.loads(result.stdout)["hookSpecificOutput"] if result.stdout.strip() else None
+
+
+def test_an_approved_ask_guard_allows_for_the_rest_of_its_session(tmp_path: Path) -> None:
+    repo, state = tmp_path / "repo", tmp_path / "state"
+    repo.mkdir()
+    contract(repo, GUARDS)
+
+    assert hook(repo, state, "PreToolUse", "s1", "Bash", command="git push origin main")["permissionDecision"] == "ask"
+    hook(repo, state, "PostToolUse", "s1", "Bash", command="git push origin main")
+
+    again = hook(repo, state, "PreToolUse", "s1", "Bash", command="git push origin feature")
+    assert again["permissionDecision"] == "allow"
+    assert "approved earlier this session" in again["permissionDecisionReason"]
+    assert hook(repo, state, "PreToolUse", "s2", "Bash", command="git push origin main")["permissionDecision"] == "ask"
+    assert hook(repo, state, "PreToolUse", "s1", "Bash", command="git push -f")["permissionDecision"] == "deny"

@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import NamedTuple
 
@@ -77,6 +78,22 @@ def matching(rules: list[Guard], tool: str, inputs: dict) -> Guard | None:
     return None
 
 
+def approvals(session: str) -> Path:
+    base = Path(os.environ.get("SUBPOWERS_STATE_DIR") or Path(tempfile.gettempdir()) / "subpowers-approvals")
+    return base / f"{re.sub(r'[^A-Za-z0-9_-]', '_', session)}.json"
+
+
+def approved(session: str) -> set[str]:
+    path = approvals(session)
+    return set(json.loads(path.read_text())) if session and path.is_file() else set()
+
+
+def remember(session: str, guard: Guard) -> None:
+    path = approvals(session)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(sorted(approved(session) | {guard.pattern})))
+
+
 def main() -> int:
     payload = json.loads(sys.stdin.read() or "{}")
     root = repo_root(os.environ.get("CLAUDE_PROJECT_DIR") or payload.get("cwd") or os.getcwd())
@@ -85,11 +102,23 @@ def main() -> int:
     guard = matching(guards(root), payload.get("tool_name", ""), payload.get("tool_input") or {})
     if guard is None or guard.decision == "allow":
         return 0
-    decision = {
-        "hookEventName": "PreToolUse",
-        "permissionDecision": guard.decision,
-        "permissionDecisionReason": f"subpowers guard: {guard.reason}",
-    }
+    session = payload.get("session_id") or ""
+    if payload.get("hook_event_name") == "PostToolUse":
+        if guard.decision == "ask" and session:
+            remember(session, guard)
+        return 0
+    if guard.decision == "ask" and guard.pattern in approved(session):
+        decision = {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "allow",
+            "permissionDecisionReason": f"subpowers guard: approved earlier this session ({guard.reason})",
+        }
+    else:
+        decision = {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": guard.decision,
+            "permissionDecisionReason": f"subpowers guard: {guard.reason}",
+        }
     print(json.dumps({"hookSpecificOutput": decision}))
     return 0
 

@@ -102,7 +102,8 @@ Prose rules can be skipped; a guard cannot. Before every tool call, `hooks/guard
 match) and the call's input as JSON (search) against the contract's `## Guards`, then the plugin's defaults in
 [`hooks/guards.md`](subpowers/hooks/guards.md). The first match decides: `deny` blocks the call and hands the agent the
 guard's reason, `ask` turns it into a permission prompt, `allow` lets it through, which is how a contract overrides a
-default.
+default. An `ask` asks once per session: when the user approves it and the call runs, a `PostToolUse` hook remembers
+that guard for the session, and its later matches go through without a prompt. A new session asks again.
 
 The defaults hold in every repo, contract or not: no force-push, no whole-repo destructive git, no install without a
 prompt. With a `## Plans` directory they also keep the archive closed unless the user approves, and stop a plan being
