@@ -28,8 +28,8 @@ A canvas records decisions; it is not a scrapbook. Every board has exactly one s
 * **User first:** Write down who opens the page, what they want to learn there, and in what order. Every block answers
   one item on that list. The data the backend happens to have, or the shape it arrives in (laps, splits, files, calendar
   weeks), is never the starting point.
-* **Challenge the idea:** Unless a signed-off spec already covers it, run `subpowers-spec` Step 2 in chat before the
-  first board: research, assess, other approaches, the goal. The goal is the yardstick the finished page is judged by.
+* **Grill the idea:** Unless a signed-off spec already covers it, grill it with `subpowers-spec` Step 2 before the
+  first board. The goal it settles is the yardstick the finished page is judged by.
 * **Real data:** Draw on the owner's real data, read through the contract's `## Inspect` commands. Placeholder data
   hides the layout problems real values cause.
 

@@ -25,7 +25,7 @@ Translate the spec into a file-by-file plan before code moves. This file becomes
 * **Read the design.** If the spec names a design, or the contract's `## Design` section covers this work, read the
   parts the tasks will build. A plan that paraphrases a design instead of pointing at it gets built from the
   paraphrase.
-* **Batch your questions.** If architectural decisions remain open, ask up to 3 targeted questions in one tool call.
+* **Grill open decisions.** If architectural decisions remain open, ask them in `subpowers-spec` Step 2 rounds.
 
 ## 2. Where plans live
 

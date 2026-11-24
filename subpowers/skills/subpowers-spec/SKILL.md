@@ -1,17 +1,19 @@
 ---
 name: subpowers-spec
 description: >
-  Use when the goal is unclear, or business logic must be defined before any
-  file is changed. Trigger on: "design a feature", "write a spec", "define
-  requirements". Produces the "what" and "why", not the "how". If the user is
-  only asking how existing code works without requesting a change, DO NOT
-  invoke this — route to `subpowers-explore` instead.
+  Use when a message brings a new idea, the goal is unclear, or business logic
+  must be defined before any file is changed. Grills the idea in rounds of at
+  most 3 yes-default questions until nothing is left open. Trigger on: a new
+  idea, "grill", "design a feature", "write a spec", "define requirements".
+  Produces the "what" and "why", not the "how". If the user is only asking how
+  existing code works without requesting a change, DO NOT invoke this — route
+  to `subpowers-explore` instead.
 ---
 
 # Spec
 
 <directives>
-Establish the "what" and the "why" before a single file is touched. Do not decide the "how" — file paths, functions, tasks. Lock in the business logic. Do not guess; define.
+Establish the "what" and the "why" before a single file is touched. Do not decide the "how" — file paths, functions, tasks. Grill every new idea until no decision is left open. Do not guess; define.
 </directives>
 
 ## 1. Ground the spec
@@ -23,21 +25,49 @@ Establish the "what" and the "why" before a single file is touched. Do not decid
   derive the acceptance criteria from it, not from memory or taste. Anything the work needs that the design does not
   show (a state, a screen, a breakpoint, a field) goes under **Additions to the design**, and each one is settled with
   the user — drawn into the design first, or explicitly approved — before sign-off. Never fill a gap yourself.
-* **Batch your questions:** If requirements are ambiguous, resolve them in one round — up to 3 targeted,
-  multiple-choice or yes/no questions in a single tool call. Do not ask about file layouts or library choices; those
-  belong to `subpowers-plan`.
 
-## 2. Challenge the idea
+## 2. Grill the idea
 
-The idea as given is a starting point, not the spec.
+A new idea is a change to what something does or shows, or to an agreed design, decision or rule. Every one is grilled
+before work starts. A direct question, a bug report, or a clear change whose purpose is settled is not.
 
-1. **Research the users:** What the idea means to the people who use the product: what they come for, what they
-   already get elsewhere in it, what the idea changes for them.
-2. **Assess:** A good idea is made better; say how. A weak idea is explained (what it costs, what it breaks) and
-   replaced by a better one.
-3. **Diverge:** Propose 2–3 other approaches to the same idea, at least one of them unexpected (a different form,
-   model or interaction, not a variation). Approaches to the given idea only, never extra features.
-4. **Name the goal:** The chosen approach's goal is the yardstick the built result is reassessed against.
+1. **Map the design tree:** Every decision branches into the decisions that hang off it. The frontier is every
+   decision whose prerequisites are settled: the questions you can ask now without guessing answers not yet heard.
+2. **Ask in rounds:** At most 3 frontier questions a round, ranked by how many later decisions each unblocks; the
+   rest wait for the next round. A question that depends on one still open belongs to a later round. Wait for the
+   answers, then recompute the frontier.
+3. **Open with the approach:** Round 1, Q1 is how to approach the idea. Ground it in what the idea means to the
+   people who use the product: what they come for, what they already get elsewhere in it, what it changes for them.
+   A good idea is made better; a weak one is explained (what it costs, what it breaks) and replaced. Offer the
+   recommended approach, two alternatives and one unexpected (a different form, model or interaction, not a
+   variation). Approaches to the given idea only, never extra features.
+4. **Make "yes" the answer:** Word each question so "yes" accepts the recommendation. "yes" alone accepts the whole
+   round; "Qn: …" overrides one. Do not ask about file layouts or library choices; those belong to `subpowers-plan`.
+5. **Find facts yourself:** Facts come from the codebase and tools, never from the user. Look them up yourself. A
+   sweep over many files goes to a sub-agent on a cheap model (Claude Code: `Agent` with `model: "sonnet"`; Codex:
+   `spawn_agent` with `gpt-6-luna`) that returns `file:line` citations, not contents; reread the load-bearing spans
+   before relying on them. A running lookup holds back only the questions downstream of it.
+6. **Keep the tree on disk:** Track settled answers and the open frontier in a file in the session scratchpad.
+   Update it after every answer and reread it before every round, so context compaction loses nothing. Nothing of it
+   reaches the repository before sign-off.
+7. **When no one can answer:** In an unattended or overnight run, take each recommended answer, mark it
+   `assumed (unattended)` in the tree, and list every assumed answer under **Assumed** in the spec.
+8. **Stop when the frontier is empty:** Every branch visited, nothing silently assumed. The chosen approach's goal is
+   the yardstick the built result is reassessed against.
+
+Format a round like so:
+
+```markdown
+❓ **Q1** - **<question title>**: <question body, as long as it needs, including the choices>
+
+➡️ <recommended answer>
+
+---
+
+❓ **Q2** - **<question title>**: <question body>
+
+➡️ <recommended answer>
+```
 
 ## 3. Write the spec
 
@@ -49,6 +79,7 @@ system.
 
 **Goal:** <One sentence — the defining objective.>
 **Approaches:** <The chosen one and why; the others considered, one line each.>
+**Assumed:** <Each answer taken unattended under §2, for the user to confirm — omit if none.>
 
 **Design:** <Source and version, and which part covers which criterion — or "none".>
 **Additions to the design:** <Each gap, and how the user settled it — omit if none.>

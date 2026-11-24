@@ -21,7 +21,7 @@ Install at **user scope** to get the skills in every project.
 | Skill                 | The Rule                                                   | Invoke when...                                                           |
 |:----------------------|:-----------------------------------------------------------|:-------------------------------------------------------------------------|
 | `subpowers-explore`   | Read-only. No writes, no code changes.                     | You need to know "how X works" without triggering code changes or plans. |
-| `subpowers-spec`      | Lock the *what* and *why* before anything touches files.   | The goal or the definition of "done" is still fuzzy.                     |
+| `subpowers-spec`      | Grill every new idea; lock the *what* and *why* first.     | A message brings a new idea, or "done" is still fuzzy.                   |
 | `subpowers-design`    | Page first; every board badged; finish with approved only. | A page or component needs drawing, or a canvas has comments to answer.    |
 | `subpowers-plan`      | Scope and sequence multi-file work in writing before code. | The change spans several files or systems.                               |
 | `subpowers-implement` | Red → green → refactor, then review.                       | 1–2 files, purpose already clear.                                        |
